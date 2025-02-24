@@ -79,13 +79,13 @@
                     </ColumnListItem>
                 </suggestionRows>
             </MultiInput>
-            <Label text="Funcational Location" />
+            <!-- <Label text="Funcational Location" />
             <MultiInput
                 width="70%"
                 selectedKey=""
                 showClearIcon="true"
                 showValueHelp="true"
-            />
+            /> -->
             <Label text="Mainwork Center" />
             <MultiInput
                 id="idMainWorkCenter"
@@ -112,13 +112,13 @@
                     </ColumnListItem>
                 </suggestionRows>
             </MultiInput>
-            <Label text="Period" />
+            <!-- <Label text="Period" />
             <MultiInput
                 width="70%"
                 selectedKey=""
                 showClearIcon="true"
                 showValueHelp="true"
-            />
+            /> -->
         </f:content>
     </f:SimpleForm>
 </core:FragmentDefinition>
