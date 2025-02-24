@@ -1,0 +1,112 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/IWFND/CATALOGSERVICE;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='LOCAL')/$value">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/sap/ZWM_SS_ORDER_OEB_SRV/$metadata">
+        <edmx:Include Namespace="ZWM_SS_ORDER_OEB_SRV" Alias="SAP"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/sap/opu/odata/sap/ZWM_SS_ORDER_OEB_SRV/$metadata">
+        <edmx:Include Namespace="ZWM_SS_ORDER_OEB_SRV" Alias="SAP"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local">
+                <Annotations Target="SAP.OEB_OPS/OrderNo">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="Service_OrderSet"/>
+                        <PropertyValue Property="SearchSupported" Bool="false" />
+                        <PropertyValue Property="Parameters" >
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="ValueListProperty" String="OrderId"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="OrderNo"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="OrderType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="ValueListProperty" String="Description"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="Description"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        
+                    </Record>
+                </Annotation>
+            </Annotations>
+             <Annotations Target="SAP.OEB_OPS/ORDER_TYPE">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="Order_TYpeSet"/>
+                        <PropertyValue Property="SearchSupported" Bool="true" />
+                        <PropertyValue Property="Parameters" >
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="ValueListProperty" String="OrderType"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="OrderType"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="SAP.OEB_OPS/WorkCenter">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="Main_Work_CenterSet"/>
+                        <PropertyValue Property="SearchSupported" Bool="false" />
+                        <PropertyValue Property="Parameters" >
+                            <Collection>
+                                <Record Type="Common.ValueListParameterIn">
+                                    <PropertyValue Property="ValueListProperty" String="Description"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="Description"/>
+                                </Record>
+                                 <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="ValueListProperty" String="Description"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="Description"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="ValueListProperty" String="MainWorkCenter"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="MainWorkCenter"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        
+                    </Record>
+                </Annotation>
+            </Annotations>
+             <Annotations Target="SAP.OEB_OPS/OP_CODE">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="Operation_Activity_TypeSet"/>
+                        <PropertyValue Property="SearchSupported" Bool="false" />
+                        <PropertyValue Property="Parameters" >
+                            <Collection>
+                                <Record Type="Common.ValueListParameterIn">
+                                    <PropertyValue Property="ValueListProperty" String="OpActivityType"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="OpActivityType"/>
+                                </Record>
+                                 <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="ValueListProperty" String="OpActivityType"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="OpActivityType"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterOut">
+                                    <PropertyValue Property="ValueListProperty" String="MainDescription"/>
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="MainWorkCenter"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        
+                    </Record>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

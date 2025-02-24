@@ -1,0 +1,154 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+>
+    <f:SimpleForm
+        editable="true"
+        layout="ResponsiveGridLayout"
+        labelSpanXL="3"
+        labelSpanL="3"
+        labelSpanM="3"
+        labelSpanS="12"
+        adjustLabelSpan="false"
+        emptySpanXL="4"
+        emptySpanL="4"
+        emptySpanM="4"
+        emptySpanS="0"
+        columnsXL="1"
+        columnsL="1"
+        columnsM="1"
+        title="Order Selection"
+        singleContainerFullSize="false"
+    >
+        <f:content>
+            <Label text="Order No" />
+            <MultiInput
+                id="idServiceOrder"
+                width="60%"
+                showValueHelp="false"
+                valueHelpRequest=".onValueHelpRequested"
+                suggestionItemSelected=".onOrderSuggestionItemPress"
+                suggestionRows="{
+				path: '/Service_OrderSet'
+			}"
+            >
+                <suggestionColumns>
+                    <Column>
+                        <Label text="Order ID" />
+                    </Column>
+                    <Column>
+                        <Label text="Order Type" />
+                    </Column>
+                    <Column>
+                        <Label text="Description" />
+                    </Column>
+                </suggestionColumns>
+                <suggestionRows>
+                    <ColumnListItem>
+                        <Label text="{OrderId}" />
+                        <Label text="{OrderType}" />
+                        <Label text="{Description}" />
+                    </ColumnListItem>
+                </suggestionRows>
+            </MultiInput>
+            <Label text="Order Type" />
+            <MultiInput
+                id="idOrderType"
+                width="60%"
+                showValueHelp="false"
+                valueHelpRequest=".onValueHelpRequested"
+                suggestionItemSelected=".onOrderTypeSuggestionItemPress"
+                suggestionRows="{
+				path: '/Order_TYpeSet'
+			}"
+            >
+                <suggestionColumns>
+                    <Column>
+                        <Label text="Order Type" />
+                    </Column>
+                    <Column>
+                        <Label text="Description" />
+                    </Column>
+                </suggestionColumns>
+                <suggestionRows>
+                    <ColumnListItem>
+                        <Label text="{OrderType}" />
+                        <Label text="{Description}" />
+                    </ColumnListItem>
+                </suggestionRows>
+            </MultiInput>
+            <Label text="Funcational Location" />
+            <MultiInput
+                width="70%"
+                selectedKey=""
+                showClearIcon="true"
+                showValueHelp="true"
+            />
+            <Label text="Mainwork Center" />
+            <MultiInput
+                id="idMainWorkCenter"
+                width="60%"
+                showValueHelp="false"
+                valueHelpRequest=".onValueHelpRequested"
+                suggestionItemSelected=".onMainWCSuggestionItemPress"
+                suggestionRows="{
+				path: '/Main_Work_CenterSet'
+			}"
+            >
+                <suggestionColumns>
+                    <Column>
+                        <Label text="Main Work Center" />
+                    </Column>
+                    <Column>
+                        <Label text="Description" />
+                    </Column>
+                </suggestionColumns>
+                <suggestionRows>
+                    <ColumnListItem>
+                        <Label text="{MainWorkCenter}" />
+                        <Label text="{Description}" />
+                    </ColumnListItem>
+                </suggestionRows>
+            </MultiInput>
+            <Label text="Period" />
+            <MultiInput
+                width="70%"
+                selectedKey=""
+                showClearIcon="true"
+                showValueHelp="true"
+            />
+        </f:content>
+    </f:SimpleForm>
+</core:FragmentDefinition>
+<!-- <VBox>
+            <smartForm:SmartForm
+                editable="true"
+                binding="{/OEB_OPSSet('1000020')}"
+            >
+                <smartForm:layout>
+                    <smartForm:ColumnLayout
+                        emptyCellsLarge="4"
+                        labelCellsLarge="4"
+                        columnsM="1"
+                        columnsL="1"
+                        columnsXL="1"
+                    />
+                </smartForm:layout>
+                <smartForm:Group>
+                    <smartForm:GroupElement>
+                        <smartMultiInput:SmartMultiInput value="{OrderNo}" />
+                    </smartForm:GroupElement>
+                    <smartForm:GroupElement>
+                        <smartMultiInput:SmartMultiInput value="{ORDER_TYPE}" />
+                    </smartForm:GroupElement>
+                    <smartForm:GroupElement>
+                        <smartMultiInput:SmartMultiInput value="{WorkCenter}" />
+                    </smartForm:GroupElement>
+                    <smartForm:GroupElement>
+                        <smartMultiInput:SmartMultiInput value="{OP_CODE}" />
+                    </smartForm:GroupElement>
+                </smartForm:Group>
+            </smartForm:SmartForm>
+        </VBox> -->

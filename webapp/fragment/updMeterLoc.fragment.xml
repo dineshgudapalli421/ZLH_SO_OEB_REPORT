@@ -1,0 +1,77 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+>
+    <Dialog
+        title="Operations Report"
+        contentWidth="auto"
+        contentHeight="auto"
+        busy="{OEBReportModel>/bDialogBusy}"
+        busyIndicatorDelay="1"
+    >
+        <content>
+            <f:SimpleForm
+                editable="true"
+                layout="ColumnLayout"
+                columnsM="2"
+                columnsL="2"
+                columnsXL="2"
+                binding="{OEBReportModel>/oSelectedOEB}"
+            >
+                <f:content>
+                    <core:Title text="Information" />
+                    <Label text="Order/Operation" />
+                    <Input
+                        value="{OEBReportModel>OrderNo}"
+                        editable="false"
+                    />
+                    <Input
+                        value="{OEBReportModel>Activity}"
+                        editable="false"
+                        width="40%"
+                    />
+                    <Label text="Short Text" />
+                    <Input
+                        value="{OEBReportModel>OprShortText}"
+                        editable="false"
+                    />
+                    <core:Title text="Meter Location" />
+                    <Label text="Meter Location" />
+                    <Select
+                        selectedKey="{OEBReportModel>/oMeterLoc/sSelectedLoc}"
+                    >
+                        <core:Item
+                            key="S"
+                            text="Standard"
+                        />
+                        <core:Item
+                            key="N"
+                            text="Non-Standard"
+                        />
+                    </Select>
+                    <Label text="Location Description" />
+                    <TextArea value="{OEBReportModel>/oMeterLoc/sDesc}" rows="2" />
+                </f:content>
+            </f:SimpleForm>
+        </content>
+        <footer>
+            <Toolbar>
+                <content>
+                    <ToolbarSpacer />
+                    <Button
+                        type="Accept"
+                        text="Save"
+                        press=".onSaveMeterLoc"
+                    />
+                    <Button
+                        type="Reject"
+                        text="Close"
+                        press=".onCloseUpdMeterLoc"
+                    />
+                </content>
+            </Toolbar>
+        </footer>
+    </Dialog>
+</core:FragmentDefinition>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ZWM_SS_ORDER_OEB_SRV" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Service_Order" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="OrderId"/>
+                </Key>
+                <Property Name="OrderId" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Order" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OrderType" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Order Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Order_TYpe" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="OrderType"/>
+                </Key>
+                <Property Name="OrderType" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Order Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="FunctionalLocation" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="FunctionalLoc"/>
+                </Key>
+                <Property Name="FunctionalLoc" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Functional loc." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Cocd" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Company Code" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Main_Work_Center" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="MainWorkCenter"/>
+                </Key>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MainWorkCenter" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Main WorkCtr" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Period" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="DateRange"/>
+                </Key>
+                <Property Name="DateRange" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Partner" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="PartnerFunc"/>
+                </Key>
+                <Property Name="PartnerFunc" Type="Edm.String" Nullable="false" MaxLength="2" sap:unicode="false" sap:label="Partner Functn" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Operation_Work_Center" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="WorkCenter"/>
+                </Key>
+                <Property Name="WorkCenter" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Work Center" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Operation_Activity_Type" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="OpActivityType"/>
+                </Key>
+                <Property Name="OpActivityType" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="MaintActivType" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MainDescription" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Actual_Finish_Date" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="DateRange"/>
+                </Key>
+                <Property Name="DateRange" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="OEB_OPS" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="OrderNo"/>
+                </Key>
+                <Property Name="OrderNo" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Order" sap:creatable="false" sap:updatable="false" sap:sortable="false"/>
+                <Property Name="StatusUser" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Notification" Type="Edm.String" Nullable="false" MaxLength="12" sap:unicode="false" sap:label="Notification" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Activity" Type="Edm.String" Nullable="false" MaxLength="4" sap:unicode="false" sap:label="Activity" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="OprShortText" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Op. Short Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Pmacttype" Type="Edm.String" Nullable="false" MaxLength="6" sap:unicode="false" sap:label="Activity Type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="WorkCenter" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Work Center" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Description" Type="Edm.String" Nullable="false" MaxLength="20" sap:unicode="false" sap:label="Name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StreetAndHouseNumber" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Text" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="PlantSection" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Plant Section" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="35" sap:unicode="false" sap:label="Last name" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="DescriptionReason" Type="Edm.String" Nullable="false" MaxLength="30" sap:unicode="false" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Counter" Type="Edm.String" Nullable="false" MaxLength="8" sap:unicode="false" sap:label="Counter" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="StartConstraint" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Start constr." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="FinConstraint" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Finish Constr." sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="EsaInspno" Type="Edm.String" Nullable="false" MaxLength="10" sap:unicode="false" sap:label="Permit" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="ActFinish" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="Execution End Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CounterDays" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Number of days remaining" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="CounterTime" Type="Edm.String" Nullable="false" MaxLength="3" sap:unicode="false" sap:label="Number of times site was not ready" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="SR_DATE" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SrStartDate"/>
+                </Key>
+                <Property Name="SrStartDate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="SR Start Date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="SrFinDate" Type="Edm.DateTime" Nullable="false" Precision="7" sap:unicode="false" sap:label="SR Finish date" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="Status" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Status" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Meter_Location" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="ShortText"/>
+                </Key>
+                <Property Name="ShortText" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MlType" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Meter location type" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="MlDesc" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="Meter location description" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Customer_confirmation" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="UserStatus"/>
+                </Key>
+                <Property Name="UserStatus" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="User statusafter customer confirmation" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TaskCode" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Tak code based on user confirmation" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Request_Customer_Confirmation" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="UserStatus"/>
+                </Key>
+                <Property Name="UserStatus" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="User statusafter customer confirmation" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TaskCode" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Tak code based on user confirmation" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityType Name="Dispatch_Operation" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="UserStatus"/>
+                </Key>
+                <Property Name="UserStatus" Type="Edm.String" Nullable="false" MaxLength="40" sap:unicode="false" sap:label="User statusafter customer confirmation" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+                <Property Name="TaskCode" Type="Edm.String" Nullable="false" MaxLength="5" sap:unicode="false" sap:label="Tak code based on user confirmation" sap:creatable="false" sap:updatable="false" sap:sortable="false" sap:filterable="false"/>
+            </EntityType>
+            <EntityContainer Name="ZWM_SS_ORDER_OEB_SRV_Entities" m:IsDefaultEntityContainer="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="Service_OrderSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Service_Order" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="Order_TYpeSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Order_TYpe" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="FunctionalLocationSet" EntityType="ZWM_SS_ORDER_OEB_SRV.FunctionalLocation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="Main_Work_CenterSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Main_Work_Center" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="PeriodSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Period" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="PartnerCollection" EntityType="ZWM_SS_ORDER_OEB_SRV.Partner" sap:content-version="1"/>
+                <EntitySet Name="Operation_Work_CenterCollection" EntityType="ZWM_SS_ORDER_OEB_SRV.Operation_Work_Center" sap:content-version="1"/>
+                <EntitySet Name="Operation_Activity_TypeCollection" EntityType="ZWM_SS_ORDER_OEB_SRV.Operation_Activity_Type" sap:content-version="1"/>
+                <EntitySet Name="Actual_Finish_DateSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Actual_Finish_Date" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="OEB_OPSSet" EntityType="ZWM_SS_ORDER_OEB_SRV.OEB_OPS" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="SR_DATESet" EntityType="ZWM_SS_ORDER_OEB_SRV.SR_DATE" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="Meter_LocationSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Meter_Location" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="Customer_confirmationSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Customer_confirmation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="Request_Customer_ConfirmationSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Request_Customer_Confirmation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="Dispatch_OperationSet" EntityType="ZWM_SS_ORDER_OEB_SRV.Dispatch_Operation" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:pageable="false" sap:addressable="false" sap:content-version="1"/>
+                <FunctionImport Name="UpdateSiteReadinessDate" ReturnType="Collection(ZWM_SS_ORDER_OEB_SRV.SR_DATE)" EntitySet="SR_DATESet" m:HttpMethod="GET" sap:action-for="ZWM_SS_ORDER_OEB_SRV.SR_DATE">
+                    <Parameter Name="SITE_DATE" Type="Edm.String" Mode="In" MaxLength="8"/>
+                    <Parameter Name="OPR_SHORT_TEXT" Type="Edm.String" Mode="In" MaxLength="40"/>
+                    <Parameter Name="Operation" Type="Edm.String" Mode="In" MaxLength="4"/>
+                    <Parameter Name="ORDER_NO" Type="Edm.String" Mode="In" MaxLength="12"/>
+                </FunctionImport>
+                <FunctionImport Name="UpdateMeterLocation" ReturnType="Collection(ZWM_SS_ORDER_OEB_SRV.Meter_Location)" EntitySet="Meter_LocationSet" m:HttpMethod="GET" sap:action-for="ZWM_SS_ORDER_OEB_SRV.Meter_Location">
+                    <Parameter Name="Loc_Desc" Type="Edm.String" Mode="In"/>
+                    <Parameter Name="METER_LOCATION" Type="Edm.String" Mode="In" MaxLength="20"/>
+                    <Parameter Name="OPR_SHORT_TEXT" Type="Edm.String" Mode="In" MaxLength="40"/>
+                    <Parameter Name="Order_ID" Type="Edm.String" Mode="In" MaxLength="12"/>
+                    <Parameter Name="Operation" Type="Edm.String" Mode="In" MaxLength="4"/>
+                </FunctionImport>
+                <FunctionImport Name="UpdateCustomerConfirmation" ReturnType="Collection(ZWM_SS_ORDER_OEB_SRV.Customer_confirmation)" EntitySet="Customer_confirmationSet" m:HttpMethod="GET" sap:action-for="ZWM_SS_ORDER_OEB_SRV.Customer_confirmation">
+                    <Parameter Name="Operation" Type="Edm.String" Mode="In" MaxLength="4"/>
+                    <Parameter Name="Order_ID" Type="Edm.String" Mode="In" MaxLength="12"/>
+                    <Parameter Name="OPR_SHORT_TEXT" Type="Edm.String" Mode="In" MaxLength="40"/>
+                    <Parameter Name="Site_Ready" Type="Edm.String" Mode="In" MaxLength="1"/>
+                </FunctionImport>
+                <FunctionImport Name="RequestCustomerConfirmation" ReturnType="Collection(ZWM_SS_ORDER_OEB_SRV.Request_Customer_Confirmation)" EntitySet="Request_Customer_ConfirmationSet" m:HttpMethod="GET" sap:action-for="ZWM_SS_ORDER_OEB_SRV.Request_Customer_Confirmation">
+                    <Parameter Name="Order_ID" Type="Edm.String" Mode="In" MaxLength="12"/>
+                    <Parameter Name="Operation" Type="Edm.String" Mode="In" MaxLength="4"/>
+                </FunctionImport>
+                <FunctionImport Name="DispatchOperation" ReturnType="Collection(ZWM_SS_ORDER_OEB_SRV.Dispatch_Operation)" EntitySet="Dispatch_OperationSet" m:HttpMethod="GET" sap:action-for="ZWM_SS_ORDER_OEB_SRV.Dispatch_Operation">
+                    <Parameter Name="Order_ID" Type="Edm.String" Mode="In" MaxLength="12"/>
+                    <Parameter Name="Operation" Type="Edm.String" Mode="In" MaxLength="4"/>
+                </FunctionImport>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <atom:link rel="self" href="http://sapsdvapp.aws.londonhydro.cloud:8000/sap/opu/odata/sap/ZWM_SS_ORDER_OEB_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="http://sapsdvapp.aws.londonhydro.cloud:8000/sap/opu/odata/sap/ZWM_SS_ORDER_OEB_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

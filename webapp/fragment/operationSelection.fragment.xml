@@ -1,0 +1,68 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+>
+    <f:SimpleForm
+        editable="true"
+        layout="ResponsiveGridLayout"
+        labelSpanXL="3"
+        labelSpanL="3"
+        labelSpanM="3"
+        labelSpanS="12"
+        adjustLabelSpan="false"
+        emptySpanXL="4"
+        emptySpanL="4"
+        emptySpanM="4"
+        emptySpanS="0"
+        columnsXL="1"
+        columnsL="1"
+        columnsM="1"
+        title="Operation Selection"
+        singleContainerFullSize="false"
+    >
+        <f:content>
+            <Label text="Operation Work Center" />
+            <MultiInput
+                width="70%"
+                selectedKey=""
+                showClearIcon="true"
+                showValueHelp="true"
+            />
+            <Label text="Operation Activity Type" />
+            <MultiInput
+                id="idOpActivity"
+                width="60%"
+                showValueHelp="false"
+                selectedKey="oSelectionModel>/aSelOpActivity"
+                suggestionItemSelected=".onOpActivSuggestionItemPress"
+                suggestionRows="{
+				path: '/Operation_Activity_TypeSet',
+				length: 10
+			}"
+            >
+                <suggestionColumns>
+                    <Column>
+                        <Label text="Activity Type" />
+                    </Column>
+                    <Column>
+                        <Label text="Description" />
+                    </Column>
+                </suggestionColumns>
+                <suggestionRows>
+                    <ColumnListItem>
+                        <Label text="{OpActivityType}" />
+                        <Label text="{MainDescription}" />
+                    </ColumnListItem>
+                </suggestionRows>
+            </MultiInput>
+            <Label text="Actual finish date" />
+            <DatePicker
+                value="oSelectionModel>/sActualFinishDate"
+                minDate="{oSelectionModel>/minDate}"
+                valueFormat="YYYYddMM"
+            />
+        </f:content>
+    </f:SimpleForm>
+</core:FragmentDefinition>
