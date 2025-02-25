@@ -33,6 +33,17 @@
         "settings": {
           "localUri": "annotations/annotation0.xml"
         }
+      },
+      "ORDOPRService": {
+        "uri": "/sap/opu/odata/sap/ZWM_ORDOPR_SCH_SRV/",
+        "type": "OData",
+        "settings": {
+          "annotations": [
+            "annotation0"
+          ],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "2.0"
+        }
       }
     }
   },
@@ -80,6 +91,11 @@
       },
       "": {
         "dataSource": "mainService",
+        "preload": true,
+        "settings": {}
+      },
+      "ORDModel": {
+        "dataSource": "ORDOPRService",
         "preload": true,
         "settings": {}
       }

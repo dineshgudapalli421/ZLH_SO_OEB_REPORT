@@ -25,11 +25,30 @@
         <f:content>
             <Label text="Operation Work Center" />
             <MultiInput
+                id="idOpWorkCenter"
                 width="70%"
-                selectedKey=""
+                showValueHelp="false"
                 showClearIcon="true"
-                showValueHelp="true"
-            />
+                suggestionItemSelected=".onOpWorkCenterPress"
+                suggestionRows="{
+				path: 'ORDModel>/WorkCenter_DetailsSet'
+                }"
+            >
+                <suggestionColumns>
+                    <Column>
+                        <Label text="Activity Type" />
+                    </Column>
+                    <Column>
+                        <Label text="Description" />
+                    </Column>
+                </suggestionColumns>
+                <suggestionRows>
+                    <ColumnListItem>
+                        <Label text="{ORDModel>WORK_CENTER}" />
+                        <Label text="{ORDModel>DESCRIPTION}" />
+                    </ColumnListItem>
+                </suggestionRows>
+            </MultiInput>
             <Label text="Operation Activity Type" />
             <MultiInput
                 id="idOpActivity"
@@ -38,8 +57,7 @@
                 selectedKey="oSelectionModel>/aSelOpActivity"
                 suggestionItemSelected=".onOpActivSuggestionItemPress"
                 suggestionRows="{
-				path: '/Operation_Activity_TypeSet',
-				length: 10
+				path: '/Operation_Activity_TypeSet'
 			}"
             >
                 <suggestionColumns>

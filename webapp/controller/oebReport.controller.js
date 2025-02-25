@@ -79,6 +79,8 @@ sap.ui.define([
                         urlParameters: oUrlParameters,
                         success: function (oData) {
                             oModel.setProperty("/bDialogBusy", false);
+                            MessageBox.success("site readiness date updated for order");
+                            oController.onCloseSiteReadiness();
                         }, error: function (oError) {
                             oModel.setProperty("/bDialogBusy", false);
                             var oMessage;
@@ -146,7 +148,8 @@ sap.ui.define([
                     urlParameters: oUrlParameters,
                     success: function (oData) {
                         oModel.setProperty("/bDialogBusy", false);
-                        // debugger;
+                        MessageBox.success("Meter Location updated");
+                        oController.onCloseUpdMeterLoc();
                     }, error: function (oError) {
                         oModel.setProperty("/bDialogBusy", false);
                         var oMessage;
@@ -188,7 +191,7 @@ sap.ui.define([
                 var oModel = oController.getView().getModel("OEBReportModel")
                 oModel.setProperty("/bPageBusy", true);
                 oController._fnGetSelectedValue();
-                var sPath = "/UpdateCustomerConfirmation";
+                var sPath = "/RequestCustomerConfirmation";
                 oController._fnDispatchOrReqCustConfirm(sPath);
             },
             _fnFilterParaCustConfirm: function () {
@@ -211,6 +214,8 @@ sap.ui.define([
                     urlParameters: oUrlParameters,
                     success: function (oData) {
                         oModel.setProperty("/bDialogBusy", false);
+                        MessageBox.success("Customer confirmation updated");
+                        oController.onCloseUpdateCustConfirm();
                     }, error: function (oError) {
                         oModel.setProperty("/bDialogBusy", false);
                         var oMessage;

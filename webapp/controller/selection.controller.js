@@ -22,17 +22,17 @@ sap.ui.define([
                 oResourceBundle = oController.getOwnerComponent().getModel("i18n").getResourceBundle();
                 var oModel = new JSONModel({});
                 var oSelectionModel = new JSONModel({
-                    bPageBusy:false,
+                    bPageBusy: false,
                     OrderNo: [],
                     OrderStatusSelected: [],
                     OperationStatusSelected: [],
                     minDate: new Date(),
-                    sActualFinishDate:"",
-                    aSelOpWorkCenter:[],
+                    sActualFinishDate: "",
+                    aSelOpWorkCenter: [],
                     aSelOpActivity: [],
-                    aSelOrders:[],
-                    aSelOrderType:[],
-                    aSelMainWC:[],
+                    aSelOrders: [],
+                    aSelOrderType: [],
+                    aSelMainWC: [],
                     OrderStatus: [{ Key: 'OUTS', description: 'Outstanding' },
                     { Key: 'INPR', description: 'In Process' },
                     { Key: 'COMP', description: 'Completed' },
@@ -72,8 +72,42 @@ sap.ui.define([
                         if (oResults.length) {
                             UIComponent.getModel("GlobalOEBModel").setProperty("/OEBReportList", oResults);
                             oRouter.navTo("OEBReport");
-                        }else{
+                        } else {
                             MessageBox.error("No results found for selection criteria");
+                        }
+                        oModel.setProperty("/bPageBusy", false);
+                    }, error: function (oError) {
+                        var oMessage;
+                        oModel.setProperty("/bPageBusy", false);
+                        if (oError.responseText.startsWith("<")) {
+                            var parser = new DOMParser();
+                            var xmlDoc = parser.parseFromString(oError.responseText, "text/xml");
+                            oMessage = xmlDoc.getElementsByTagName("message")[0].childNodes[0].nodeValue;
+                        } else {
+                            var oResponseText = oError.responseText;
+                            var sParsedResponse = JSON.parse(oResponseText);
+                            oMessage = sParsedResponse.error.message.value
+                        }
+                        MessageBox.error(oMessage);
+                    }
+                })
+            },
+            onSubmitOrderNumber: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var sOrderNo = oEvent.getParameter('value');
+                var sPath = "/Service_OrderSet('" + sOrderNo + "')";
+                var oSource = oEvent.getSource();
+                oModel.setProperty("/bPageBusy", true);
+                oOEBoDataModel.read(sPath, {
+                    success: function (oData) {
+                        if (oData.OrderId) {
+                            var oToken = new Token({
+                                key: oData.OrderId, //Key
+                                text: oData.OrderId // Text
+                            });
+                            oSource.addToken(oToken);
+                            oSource.setValue("");
                         }
                         oModel.setProperty("/bPageBusy", false);
                     }, error: function (oError) {
@@ -128,7 +162,7 @@ sap.ui.define([
                     return new Filter(filters, false);
                 }
 
-                var afilterOrdStatus = createOrFilter(OrderStatus, "Status"); 
+                var afilterOrdStatus = createOrFilter(OrderStatus, "Status");
                 var afilterOrderNo = createOrFilter(aOrderNo, "OrderNo");
                 var afilterOrderType = createOrFilter(OrdType, "ORDER_TYPE");
                 var afilterFunLoc = createOrFilter(aFunLoc, "FUN_LOC"); // change Filed name 
@@ -179,15 +213,14 @@ sap.ui.define([
                 oSelOrder.push(oValue);
                 oModel.setProperty("/aSelOrders", oSelOrder);
             },
-            onOpWCSuggestionItemPress: function (oEvent) {
+            onOpWorkCenterPress: function (oEvent) {
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
-                var oMultiInput = oController.getView().byId("idOpActivity");
+                var oMultiInput = oController.getView().byId("idOpWorkCenter");
                 var oValue = oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
                 var oSelOpWC = oModel.getProperty("/aSelOpWorkCenter");
                 oSelOpWC.push(oValue);
                 oModel.setProperty("/aSelOpWorkCenter", oSelOpWC);
-
             },
             onSuggestionItemSelected: function (oSelectedItem, oMultiInput) {
                 var oSelectedCells = oSelectedItem.getCells();

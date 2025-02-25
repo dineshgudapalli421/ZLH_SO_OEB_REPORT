@@ -30,6 +30,7 @@
                 showValueHelp="false"
                 valueHelpRequest=".onValueHelpRequested"
                 suggestionItemSelected=".onOrderSuggestionItemPress"
+                submit="onSubmitOrderNumber"
                 suggestionRows="{
 				path: '/Service_OrderSet'
 			}"
