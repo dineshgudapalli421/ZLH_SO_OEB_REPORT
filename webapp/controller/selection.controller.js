@@ -95,6 +95,7 @@ sap.ui.define([
             onSubmitOrderNumber: function (oEvent) {
                 debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
+                var oSelOrder = oModel.getProperty("/aSelOrders");
                 var sOrderNo = oEvent.getParameter('value');
                 var sPath = "/Service_OrderSet('" + sOrderNo + "')";
                 var oSource = oEvent.getSource();
@@ -108,8 +109,10 @@ sap.ui.define([
                             });
                             oSource.addToken(oToken);
                             oSource.setValue("");
+                            oSelOrder.push(oData.OrderId);
+                            oModel.setProperty("/aSelOrders", oSelOrder);
+                            oModel.setProperty("/bPageBusy", false);
                         }
-                        oModel.setProperty("/bPageBusy", false);
                     }, error: function (oError) {
                         var oMessage;
                         oModel.setProperty("/bPageBusy", false);

@@ -192,7 +192,8 @@ sap.ui.define([
                 oModel.setProperty("/bPageBusy", true);
                 oController._fnGetSelectedValue();
                 var sPath = "/RequestCustomerConfirmation";
-                oController._fnDispatchOrReqCustConfirm(sPath);
+                var sMessage = "Order is Dispatched"
+                oController._fnDispatchOrReqCustConfirm(sPath,sMessage);
             },
             _fnFilterParaCustConfirm: function () {
                 var oModel = oController.getView().getModel("OEBReportModel");
@@ -206,7 +207,7 @@ sap.ui.define([
                 }
             },
             onSaveUpdateCustomerConfirm: function () {
-                var oModel = oController.getView().getModel("OEBReportModel")
+                var oModel = oController.getView().getModel("OEBReportModel");
                 oModel.setProperty("/bDialogBusy", true);
                 var sPath = "/UpdateCustomerConfirmation";
                 var oUrlParameters = oController._fnUrlParaUpdateCustConfirm();
@@ -234,11 +235,15 @@ sap.ui.define([
             },
             _fnUrlParaUpdateCustConfirm: function () {
                 var oSelectedData = oController._fnGetSelectedValue();
+                var oModel = oController.getView().getModel("OEBReportModel");
+                // OEBReportModel>/oUpdateCustomerConfirm/sSiteReadiness
+                // var ;
+                debugger;
                 return {
-                    "Order_ID": oController.fnConcatQuotes('000001000020'),
-                    "Site_Ready": oController.fnConcatQuotes('Y'),
-                    "Operation": oController.fnConcatQuotes('0010'),
-                    "OPR_SHORT_TEXT": oController.fnConcatQuotes('TRenching')
+                    "Order_ID": oController.fnConcatQuotes(oModel.getProperty("/oSelectedOEB/OrderNo")),
+                    "Site_Ready": oController.fnConcatQuotes(oModel.getProperty("/oUpdateCustomerConfirm/sSiteReadiness")),
+                    "Operation": oController.fnConcatQuotes(oModel.getProperty("/oSelectedOEB/Activity")),
+                    "OPR_SHORT_TEXT": oController.fnConcatQuotes(oModel.getProperty("/oSelectedOEB/OprShortText"))
                 }
             },
             onPressUpdateCustConfirm: function () {
@@ -271,16 +276,17 @@ sap.ui.define([
                 oModel.setProperty("/bPageBusy", true);
                 oController._fnGetSelectedValue();
                 var sPath = "/DispatchOperation";
-                oController._fnDispatchOrReqCustConfirm(sPath);
+                var sMessage = "Order is Dispatched"
+                oController._fnDispatchOrReqCustConfirm(sPath, sMessage);
             },
-            _fnDispatchOrReqCustConfirm: function (sPath) {
+            _fnDispatchOrReqCustConfirm: function (sPath, sMessage) {
                 var oModel = oController.getView().getModel("OEBReportModel");
                 var oUrlParameters = oController._fnUrlParaDispatchOperation();
                 oOEBoDataModel.read(sPath, {
                     urlParameters: oUrlParameters,
                     success: function (oData) {
                         oModel.setProperty("/bPageBusy", false);
-                        debugger;
+                        MessageBox.success(sMessage);
                     }, error: function (oError) {
                         oModel.setProperty("/bPageBusy", false);
                         var oMessage;
