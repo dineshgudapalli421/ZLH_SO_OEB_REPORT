@@ -17,6 +17,10 @@
             <m:OverflowToolbar>
                 <m:ToolbarSpacer />
                 <m:Button
+                    press="onPressRefreshOEBList"
+                    icon="sap-icon://synchronize"
+                />
+                <m:Button
                     text="Update Site Readiness Date"
                     press="onPressSiteReadiness"
                 />
@@ -60,10 +64,10 @@
                             />
                         </template>
                     </Column>
-                    <Column width="11rem">
-                        <m:Label text="Status" />
+                    <Column width="7rem">
+                        <m:Label text="Order status" />
                         <template>
-                            <m:Input value="{OEBReportModel>StatusUser}" />
+                            <m:Text text="{OEBReportModel>StatusUser}" />
                         </template>
                     </Column>
                     <Column
@@ -75,37 +79,37 @@
                             <m:Label text="{OEBReportModel>Notification}" />
                         </template>
                     </Column>
-                    <Column width="9rem">
+                    <Column width="5rem">
                         <m:Label text="Activity" />
                         <template>
                             <m:Label text="{OEBReportModel>Activity}" />
                         </template>
                     </Column>
-                    <Column width="9rem">
+                    <Column width="14rem">
                         <m:Label text="Opr. short text" />
                         <template>
                             <m:Label text="{OEBReportModel>OprShortText}" />
                         </template>
                     </Column>
-                    <Column width="12rem">
-                        <m:Label text="PMActType" />
+                    <Column width="5rem">
+                        <m:Label text="PM Act Type" />
                         <template>
                             <m:Label text="{OEBReportModel>Pmacttype}" />
                         </template>
                     </Column>
-                    <Column width="9rem">
+                    <Column width="7rem">
                         <m:Label text="Work center" />
                         <template>
                             <m:Label text="{OEBReportModel>WorkCenter}" />
                         </template>
                     </Column>
-                    <Column width="9rem">
-                        <m:Label text="Status" />
+                    <Column width="14rem">
+                        <m:Label text="Operation status" />
                         <template>
                             <m:Label text="{OEBReportModel>Status}" />
                         </template>
                     </Column>
-                    <Column width="7rem">
+                    <Column width="14rem">
                         <m:Label text="Description" />
                         <template>
                             <m:Label text="{OEBReportModel>Description}" />
@@ -138,7 +142,7 @@
                         width="11rem"
                         hAlign="Center"
                     >
-                        <m:Label text="Description" />
+                        <m:Label text="Reason Description" />
                         <template>
                             <m:Label
                                 text="{OEBReportModel>DescriptionReason}"
@@ -160,16 +164,7 @@
                     >
                         <m:Label text="Start constraint" />
                         <template>
-                            <m:Label text="{OEBReportModel>StartConstraint }" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="11rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="Start constraint" />
-                        <template>
-                            <m:Label text="{OEBReportModel>FinConstraint }" />
+                            <m:Label text="{OEBReportModel>StartConstraint}" />
                         </template>
                     </Column>
                     <Column
@@ -178,16 +173,16 @@
                     >
                         <m:Label text="Fin.Constr" />
                         <template>
-                            <m:Label text="{OEBReportModel>EsaInspno}" />
+                            <m:Label text="{OEBReportModel>FinConstraint}" />
                         </template>
                     </Column>
                     <Column
                         width="11rem"
                         hAlign="Center"
                     >
-                        <m:Label text="ESA InspNo" />
+                        <m:Label text="ESA Insp No" />
                         <template>
-                            <m:Label text="{OEBReportModel>ActFinish }" />
+                            <m:Label text="{OEBReportModel>EsaInspno}" />
                         </template>
                     </Column>
                     <Column
@@ -196,7 +191,7 @@
                     >
                         <m:Label text="Act.finish" />
                         <template>
-                            <m:Label text="{OEBReportModel>CounterDays}" />
+                            <m:Label text="{OEBReportModel>ActFinish }" />
                         </template>
                     </Column>
                     <Column

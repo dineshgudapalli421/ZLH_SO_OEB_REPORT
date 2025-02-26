@@ -71,6 +71,7 @@ sap.ui.define([
                         var oResults = oData.results;
                         if (oResults.length) {
                             UIComponent.getModel("GlobalOEBModel").setProperty("/OEBReportList", oResults);
+                            UIComponent.getModel("GlobalOEBModel").setProperty("/SelParameters", aFilter);
                             oRouter.navTo("OEBReport");
                         } else {
                             MessageBox.error("No results found for selection criteria");
@@ -93,7 +94,6 @@ sap.ui.define([
                 })
             },
             onSubmitOrderNumber: function (oEvent) {
-                debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oSelOrder = oModel.getProperty("/aSelOrders");
                 var sOrderNo = oEvent.getParameter('value');
@@ -233,7 +233,7 @@ sap.ui.define([
                 });
                 oMultiInput.addToken(oToken);
                 oMultiInput.setValue("");
-                return oSelectedCells[0].getText()
+                return oSelectedCells[0].getText();
             }
         });
 

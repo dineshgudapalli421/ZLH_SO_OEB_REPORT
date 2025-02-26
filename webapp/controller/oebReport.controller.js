@@ -11,7 +11,7 @@ sap.ui.define([
      */
     function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel) {
         "use strict";
-        var oController, UIComponent, oOEBoDataModel, oRouter, oResourceBundle;
+        var oController, UIComponent, oOEBoDataModel, oRouter, oResourceBundle, aSelParameters;
         return Controller.extend("com.sap.lh.cs.zlhoebreport.controller.oebReport", {
             onInit: function () {
                 oController = this;
@@ -19,13 +19,11 @@ sap.ui.define([
                 oOEBoDataModel = oController.getOwnerComponent().getModel();
                 oRouter = UIComponent.getRouter();
                 oResourceBundle = oController.getOwnerComponent().getModel("i18n").getResourceBundle();
-                oController._onRouteMatch();
-
+                oRouter.attachRoutePatternMatched(oController._onRouteMatch, oController);
             },
             _onRouteMatch: function () {
                 var oGlobalModel = oController.getOwnerComponent().getModel("GlobalOEBModel");
-                debugger;
-                var oList = oGlobalModel.getProperty("/OEBReportList");
+                var oList = oGlobalModel ? oGlobalModel.getProperty("/OEBReportList") : [];
                 var oModel = new JSONModel({
                     OEBReportList: [],
                     bPageBusy: false,
@@ -47,6 +45,12 @@ sap.ui.define([
                 oController.getView().getModel("OEBReportModel").setProperty("/OEBReportList", oList);
             },
             onPressSiteReadiness: function () {
+                var oTable = oController.getView().byId("idOEBTable");
+                var iSelectedIndex = oTable.getSelectedIndex();
+                if (iSelectedIndex === -1) {
+                    MessageToast.show('Please Select Line Item');
+                    return;
+                }
                 var oModel = oController.getView().getModel("OEBReportModel")
                 oModel.setProperty("/bPageBusy", true);
                 oModel.setProperty("/SiteReadiness/sSiteReadinessDate", "");
@@ -79,7 +83,7 @@ sap.ui.define([
                         urlParameters: oUrlParameters,
                         success: function (oData) {
                             oModel.setProperty("/bDialogBusy", false);
-                            MessageBox.success("site readiness date updated for order");
+                            MessageBox.success("Site Readiness date has been updated");
                             oController.onCloseSiteReadiness();
                         }, error: function (oError) {
                             oModel.setProperty("/bDialogBusy", false);
@@ -118,8 +122,13 @@ sap.ui.define([
             },
 
             onPressMeterLoc: function () {
+                var oTable = oController.getView().byId("idOEBTable");
+                var iSelectedIndex = oTable.getSelectedIndex();
+                if (iSelectedIndex === -1) {
+                    MessageToast.show('Please Select Line Item');
+                    return;
+                }
                 var oModel = oController.getView().getModel("OEBReportModel")
-
                 oModel.setProperty("/bPageBusy", true);
                 var oSelectedData = oController._fnGetSelectedValue();
                 if (!this.oMLDialog) {
@@ -140,7 +149,7 @@ sap.ui.define([
                 }.bind(this));
             },
             onSaveMeterLoc: function () {
-                var oModel = oController.getView().getModel("OEBReportModel")
+                var oModel = oController.getView().getModel("OEBReportModel");
                 oModel.setProperty("/bDialogBusy", true);
                 var oUrlParameters = oController._fnUrlParaMeterLoc();
                 var sPath = "/UpdateMeterLocation";
@@ -148,7 +157,7 @@ sap.ui.define([
                     urlParameters: oUrlParameters,
                     success: function (oData) {
                         oModel.setProperty("/bDialogBusy", false);
-                        MessageBox.success("Meter Location updated");
+                        MessageBox.success("Meter Location has been updated");
                         oController.onCloseUpdMeterLoc();
                     }, error: function (oError) {
                         oModel.setProperty("/bDialogBusy", false);
@@ -184,16 +193,21 @@ sap.ui.define([
                 var oTable = oController.getView().byId("idOEBTable");
                 var iSelectedIndex = oTable.getSelectedIndex();
                 oModel.setProperty("/oSelectedOEB", aOEBReportList[iSelectedIndex]);
-                // return aOEBReportList[iSelectedIndex];
             },
 
             onPressReqCustConfirm: function () {
+                var oTable = oController.getView().byId("idOEBTable");
+                var iSelectedIndex = oTable.getSelectedIndex();
+                if (iSelectedIndex === -1) {
+                    MessageToast.show('Please Select Line Item');
+                    return;
+                }
                 var oModel = oController.getView().getModel("OEBReportModel")
                 oModel.setProperty("/bPageBusy", true);
                 oController._fnGetSelectedValue();
                 var sPath = "/RequestCustomerConfirmation";
-                var sMessage = "Order is Dispatched"
-                oController._fnDispatchOrReqCustConfirm(sPath,sMessage);
+                var sMessage = "Updated"
+                oController._fnDispatchOrReqCustConfirm(sPath, sMessage);
             },
             _fnFilterParaCustConfirm: function () {
                 var oModel = oController.getView().getModel("OEBReportModel");
@@ -215,7 +229,7 @@ sap.ui.define([
                     urlParameters: oUrlParameters,
                     success: function (oData) {
                         oModel.setProperty("/bDialogBusy", false);
-                        MessageBox.success("Customer confirmation updated");
+                        MessageBox.success("Confirmation has been requested");
                         oController.onCloseUpdateCustConfirm();
                     }, error: function (oError) {
                         oModel.setProperty("/bDialogBusy", false);
@@ -247,6 +261,12 @@ sap.ui.define([
                 }
             },
             onPressUpdateCustConfirm: function () {
+                var oTable = oController.getView().byId("idOEBTable");
+                var iSelectedIndex = oTable.getSelectedIndex();
+                if (iSelectedIndex === -1) {
+                    MessageToast.show('Please Select Line Item');
+                    return;
+                }
                 var oModel = oController.getView().getModel("OEBReportModel")
                 oModel.setProperty("/bPageBusy", true);
                 oController._fnGetSelectedValue();
@@ -271,12 +291,46 @@ sap.ui.define([
             fnConcatQuotes: function (sValue) {
                 return "'" + sValue + "'"
             },
+            onPressRefreshOEBList: function () {
+                var oModel = oController.getView().getModel("OEBReportModel");
+                var oGlobalModel = UIComponent.getModel("GlobalOEBModel");
+                var aFilter = oGlobalModel.getProperty("/SelParameters");
+                var sPath = "/OEB_OPSSet";
+                oModel.setProperty("/bPageBusy", true);
+                oOEBoDataModel = oController.getOwnerComponent().getModel();
+                oOEBoDataModel.read(sPath, {
+                    filters: aFilter,
+                    success: function (oData) {
+                        oModel.setProperty("/OEBReportList", oData.results);
+                        oModel.setProperty("/bPageBusy", false);
+                    }, error: function (oError) {
+                        var oMessage;
+                        oModel.setProperty("/bPageBusy", false);
+                        if (oError.responseText.startsWith("<")) {
+                            var parser = new DOMParser();
+                            var xmlDoc = parser.parseFromString(oError.responseText, "text/xml");
+                            oMessage = xmlDoc.getElementsByTagName("message")[0].childNodes[0].nodeValue;
+                        } else {
+                            var oResponseText = oError.responseText;
+                            var sParsedResponse = JSON.parse(oResponseText);
+                            oMessage = sParsedResponse.error.message.value
+                        }
+                        MessageBox.error(oMessage);
+                    }
+                })
+            },
             onPressDispatchOperation: function () {
+                var oTable = oController.getView().byId("idOEBTable");
+                var iSelectedIndex = oTable.getSelectedIndex();
+                if (iSelectedIndex === -1) {
+                    MessageToast.show('Please Select Line Item');
+                    return;
+                }
                 var oModel = oController.getView().getModel("OEBReportModel");
                 oModel.setProperty("/bPageBusy", true);
                 oController._fnGetSelectedValue();
                 var sPath = "/DispatchOperation";
-                var sMessage = "Order is Dispatched"
+                var sMessage = "Operation Dispatched"
                 oController._fnDispatchOrReqCustConfirm(sPath, sMessage);
             },
             _fnDispatchOrReqCustConfirm: function (sPath, sMessage) {
