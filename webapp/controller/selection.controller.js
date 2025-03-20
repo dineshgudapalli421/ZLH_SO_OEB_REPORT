@@ -5,21 +5,22 @@ sap.ui.define([
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/model/json/JSONModel",
-    "sap/m/Token"
+    "sap/m/Token",
+    "sap/ui/table/Column",
+    "sap/m/Label"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel, Token) {
+    function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel, Token, UIColumn, Label) {
         "use strict";
         var oRouter, oController, oSelectionScreenModel, oOEBoDataModel, oResourceBundle, UIComponent;
         return Controller.extend("com.sap.lh.cs.zlhoebreport.controller.selection", {
             onInit: function () {
                 oController = this;
-                UIComponent = oController.getOwnerComponent();
                 oOEBoDataModel = oController.getOwnerComponent().getModel();
-                oRouter = UIComponent.getRouter();
-                oResourceBundle = oController.getOwnerComponent().getModel("i18n").getResourceBundle();
+                oRouter = oController.getOwnerComponent().getRouter();
+                UIComponent = oController.getOwnerComponent();
                 var oModel = new JSONModel({});
                 var oSelectionModel = new JSONModel({
                     bPageBusy: false,
@@ -31,7 +32,7 @@ sap.ui.define([
                     aSelOpWorkCenter: [],
                     aSelOpActivity: [],
                     aSelOrders: [],
-                    aSelOrderType: [],
+                    aSelOrderType: ["MS01"],
                     aSelMainWC: [],
                     OrderStatus: [{ Key: 'OUTS', description: 'Outstanding' },
                     { Key: 'INPR', description: 'In Process' },
@@ -58,6 +59,10 @@ sap.ui.define([
                 });
                 oController.getOwnerComponent().setModel(oModel, "GlobalOEBModel");
                 oController.getView().setModel(oSelectionModel, "oSelectionModel");
+                var oInput = oController.getView().byId("idOrderType");
+                oInput.setTokens([
+                    new Token({ text: "MS01", key: "MS01" }),
+                ]);
             },
 
             onPressNext: function () {
@@ -95,7 +100,6 @@ sap.ui.define([
             },
             onSubmitOrderNumber: function (oEvent) {
                 var oModel = oController.getView().getModel("oSelectionModel");
-                var oSelOrder = oModel.getProperty("/aSelOrders");
                 var sOrderNo = oEvent.getParameter('value');
                 var sPath = "/Service_OrderSet('" + sOrderNo + "')";
                 var oSource = oEvent.getSource();
@@ -109,8 +113,6 @@ sap.ui.define([
                             });
                             oSource.addToken(oToken);
                             oSource.setValue("");
-                            oSelOrder.push(oData.OrderId);
-                            oModel.setProperty("/aSelOrders", oSelOrder);
                             oModel.setProperty("/bPageBusy", false);
                         }
                     }, error: function (oError) {
@@ -129,33 +131,90 @@ sap.ui.define([
                     }
                 })
             },
-            // _fnReturnFilterparameter: function () {
-            //     var oModel = oController.getView().getModel("oSelectionModel");
-            //     var OrderNumber = oModel.getProperty("/OrderNo");
-            //     var aFilter = [];
-            //     aFilter.push(new Filter({
-            //         filters: [
-            //             new Filter({
-            //                 path: 'OrderNo',
-            //                 operator: FilterOperator.EQ,
-            //                 value1: OrderNumber//"000001000020"
-            //             })
-            //         ],
-            //         and: true
-            //     }));
-            //     return aFilter;
-            // },
+            onValueHelpRequested: function (oEvent) {
+                // this._oBasicSearchField = new sap.m.SearchField();
+                var oInput = oEvent.getSource();
+                this.loadFragment({
+                    name: "com.sap.lh.cs.zlhoebreport.fragment.ValueHelp.valueHelp"
+                }).then(function (oDialog) {
+                    // Set Basic Search for FilterBar
+                    // oFilterBar.setFilterBarExpanded(false);
+                    // oFilterBar.setBasicSearch(this._oBasicSearchField);
+                    oDialog.getTableAsync().then(function (oTable) {
+                        if (oTable) {
+                            if (!oTable.getModel()) {
+                                oTable.setModel(sap.ui.getCore().getModel());
+                            }
+                            var oColumnProductCode = new sap.ui.table.Column({
+                                label: new sap.m.Label({ text: "Order Number" }),
+                                template: new sap.m.Text({ text: "{OrderId}" })
+                            });
+                            oColumnProductCode.data({
+                                fieldName: "OrderId"
+                            });
+                            oTable.addColumn(oColumnProductCode);
+
+                            var oColumnProductName = new sap.ui.table.Column({
+                                label: new sap.m.Label({ text: "Description" }),
+                                template: new sap.m.Text({ wrapping: false, text: "{Description}" })
+                            });
+                            oColumnProductName.data({
+                                fieldName: "Description"
+                            });
+                            oTable.addColumn(oColumnProductName);
+                            oTable.bindRows({
+                                path: "/Service_OrderSet",
+                                events: {
+                                    dataReceived: function () {
+                                        // Handle data received event
+                                    }
+                                }
+                            });
+
+                            oDialog.update();
+                        }
+                    });
+                    oDialog.setTokens(oInput.getTokens());
+                    oDialog.open();
+                    this._oValueHelpDialog = oDialog;
+                }.bind(this));
+            },
+            onOrderNumberOkPress: function (oEvent) {
+                var oMultiInput = oController.getView().byId("idServiceOrder");
+                var aTokens = oEvent.getParameter("tokens");
+                oMultiInput.setTokens(aTokens);
+                this._oValueHelpDialog.close();
+            },
+            onOrderNumberCancelPress: function () {
+                this._oValueHelpDialog.close();
+            },
+            onOrderNumberAfterClose: function () {
+                this._oValueHelpDialog.destroy();
+            },
+            onFilterDataOrders: function (oEvent) {
+                var selectionSet = oEvent.getParameters().selectionSet;
+                var OrderID = selectionSet[0].getValue();
+                var Description = selectionSet[1].getValue();
+                debugger;
+            },
+            _getTockens: function (oSource) {
+                var aList = [];
+                var aTokens = oSource.getTokens();
+                aList = aTokens.map(object => object.getText());
+                return aList
+            },
+
             _fnReturnFilterparameter: function () {
-                // debugger;
+                var oView = oController.getView();
                 var oModel = oController.getView().getModel("oSelectionModel");
-                var OrderStatus = oModel.getProperty("/OrderStatusSelected");
-                var aOrderNo = oModel.getProperty("/aSelOrders");
-                var OrdType = oModel.getProperty("/aSelOrderType");
+                var OrderStatus = oModel.getProperty("/OrderStatusSelected"); // oController._getTockens();
+                var aOrderNo = oController._getTockens(oView.byId("idServiceOrder"));
+                var OrdType = oController._getTockens(oView.byId("idOrderType"));
                 var aFunLoc = [];
-                var aMainWorkCenter = oModel.getProperty("/aSelMainWC");
+                var aMainWorkCenter = oController._getTockens(oView.byId("idMainWorkCenter"));
                 var aPeriod = [];
                 var aOpeWorkCenter = [];
-                var aOpActivityType = oModel.getProperty("/aSelOpActivity");
+                var aOpActivityType = [];
                 var ActualFinishDate = oModel.getProperty("/sActualFinishDate"); //need to correct
                 var OperationStatus = oModel.getProperty("/OperationStatusSelected");
 
@@ -177,53 +236,32 @@ sap.ui.define([
                 var afilterOpSTATUS = createOrFilter(OperationStatus, "OP_STATUS"); // change Filed name 
                 var allFilters = [afilterOrdStatus, afilterOrderNo, afilterOrderType, afilterFunLoc, afilterWorkCenter,
                     afilterPeriod, afilterOpWorkCenter, afilterOpActivity, afilterActualFinishDate, afilterOpSTATUS].filter(f => f !== null);
-                // var finalFilter = new sap.ui.model.Filter(allFilters, true);
-                return allFilters; //finalFilter;
+                return allFilters;
             },
             onOpActivSuggestionItemPress: function (oEvent) {
-                var oModel = oController.getView().getModel("oSelectionModel");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
                 var oMultiInput = oController.getView().byId("idOpActivity");
-                var oValue = oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
-                var oSelOpActivity = oModel.getProperty("/aSelOpActivity");
-                oSelOpActivity.push(oValue);
-                oModel.setProperty("/aSelOpActivity", oSelOpActivity);
+                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
             },
             onMainWCSuggestionItemPress: function (oEvent) {
-                var oModel = oController.getView().getModel("oSelectionModel");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
                 var oMultiInput = oController.getView().byId("idMainWorkCenter");
-                var oValue = oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
-                var oSelMainWC = oModel.getProperty("/aSelMainWC");
-                oSelMainWC.push(oValue);
-                oModel.setProperty("/aSelMainWC", oSelMainWC);
+                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
             },
             onOrderTypeSuggestionItemPress: function (oEvent) {
-                var oModel = oController.getView().getModel("oSelectionModel");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
                 var oMultiInput = oController.getView().byId("idOrderType");
-                var oValue = oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
-                var oSelOrderType = oModel.getProperty("/aSelOrderType");
-                oSelOrderType.push(oValue);
-                oModel.setProperty("/aSelOrderType", oSelOrderType);
+                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
             },
             onOrderSuggestionItemPress: function (oEvent) {
-                var oModel = oController.getView().getModel("oSelectionModel");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
                 var oMultiInput = oController.getView().byId("idServiceOrder");
-                var oValue = oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
-                var oSelOrder = oModel.getProperty("/aSelOrders");
-                oSelOrder.push(oValue);
-                oModel.setProperty("/aSelOrders", oSelOrder);
+                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
             },
             onOpWorkCenterPress: function (oEvent) {
-                var oModel = oController.getView().getModel("oSelectionModel");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
                 var oMultiInput = oController.getView().byId("idOpWorkCenter");
-                var oValue = oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
-                var oSelOpWC = oModel.getProperty("/aSelOpWorkCenter");
-                oSelOpWC.push(oValue);
-                oModel.setProperty("/aSelOpWorkCenter", oSelOpWC);
+                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
             },
             onSuggestionItemSelected: function (oSelectedItem, oMultiInput) {
                 var oSelectedCells = oSelectedItem.getCells();
@@ -233,7 +271,6 @@ sap.ui.define([
                 });
                 oMultiInput.addToken(oToken);
                 oMultiInput.setValue("");
-                return oSelectedCells[0].getText();
             }
         });
 

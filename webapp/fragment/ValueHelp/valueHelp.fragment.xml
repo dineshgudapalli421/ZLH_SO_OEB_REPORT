@@ -1,0 +1,77 @@
+<core:FragmentDefinition
+    xmlns="sap.ui.comp.valuehelpdialog"
+    xmlns:m="sap.m"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:core="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:mvc="sap.ui.core.mvc"
+>
+    <ValueHelpDialog
+        title="Value Help"
+        ok=".onOrderNumberOkPress"
+        cancel=".onOrderNumberCancelPress"
+        afterClose=".onOrderNumberAfterClose"
+        supportRanges="false"
+        key="OrderId"
+    >
+        <filterBar>
+            <fb:FilterBar
+                advancedMode="true"
+                search=".onFilterDataOrders"
+                isRunningInValueHelpDialog="true"
+            >
+                <fb:filterGroupItems>
+                    <fb:FilterGroupItem
+                        groupName="__$INTERNAL$"
+                        name="ProductCode"
+                        label="Order Number"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:Input
+                                name="ProductCode"
+                                showSuggestion="true"
+                                showValueHelp="false"
+                                suggestionItems="{
+                                    path: '/ZSALESREPORTWhitespace',
+                                    sorter: { path: 'ProductCode' }
+                                }"
+                            >
+                                <core:Item
+                                    key="{ProductCode}"
+                                    text="{
+                                        path: 'ProductCode',
+                                        formatter: '.whitespace2Char'
+                                    }"
+                                />
+                            </m:Input>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem
+                        groupName="__$INTERNAL$"
+                        name="ProductName"
+                        label="Description"
+                        visibleInFilterBar="true"
+                    >
+                        <fb:control>
+                            <m:Input
+                                name="ProductName"
+                                showSuggestion="true"
+                                showValueHelp="false"
+                                suggestionItems="{
+                                    path: '/ZSALESREPORTWhitespace',
+                                    sorter: { path: 'ProductName' }
+                                }"
+                            >
+                                <core:Item
+                                    key="{ProductName}"
+                                    text="{ProductName}"
+                                />
+                            </m:Input>
+                        </fb:control>
+                    </fb:FilterGroupItem>
+                </fb:filterGroupItems>
+            </fb:FilterBar>
+        </filterBar>
+    </ValueHelpDialog>
+</core:FragmentDefinition>

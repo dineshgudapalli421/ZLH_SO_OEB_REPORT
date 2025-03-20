@@ -12,9 +12,9 @@
 >
     <Page
         id="page"
-        title="{i18n>title}"
         busy="{oSelectionModel>/bPageBusy}"
         busyIndicatorDelay="1"
+        showHeader="false"
     >
         <content>
             <core:Fragment
@@ -38,7 +38,9 @@
             <Toolbar>
                 <ToolbarSpacer />
                 <Button
-                    text="Next"
+                    class="sapUiTinyMargin"
+                    type="Emphasized"
+                    text="Execute"
                     press="onPressNext"
                 />
             </Toolbar>

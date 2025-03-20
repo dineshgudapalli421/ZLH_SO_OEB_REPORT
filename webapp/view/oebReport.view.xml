@@ -50,18 +50,13 @@
                 selectionMode="Single"
             >
                 <extension>
-                    <m:OverflowToolbar style="Clear">
-                        <m:Title text="Products" />
-                    </m:OverflowToolbar>
+                    <m:OverflowToolbar style="Clear" />
                 </extension>
                 <columns>
                     <Column width="11rem">
                         <m:Label text="Order" />
                         <template>
-                            <m:Text
-                                text="{OEBReportModel>OrderNo}"
-                                wrapping="false"
-                            />
+                            <m:Link text="{OEBReportModel>OrderNo}" press="onPressOrderNo" />
                         </template>
                     </Column>
                     <Column width="7rem">
@@ -76,7 +71,7 @@
                     >
                         <m:Label text="Notification" />
                         <template>
-                            <m:Label text="{OEBReportModel>Notification}" />
+                            <m:Link text="{OEBReportModel>Notification}" press="onPressNotification"/>
                         </template>
                     </Column>
                     <Column width="5rem">

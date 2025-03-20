@@ -29,7 +29,8 @@
             <MultiInput
                 id="idServiceOrder"
                 width="60%"
-                showValueHelp="false"
+                showValueHelp="true"
+                tokenUpdate="onOrderNoTokenUpdate"
                 submit="onSubmitOrderNumber"
                 valueHelpRequest=".onValueHelpRequested"
                 suggestionItemSelected=".onOrderSuggestionItemPress"
@@ -59,36 +60,11 @@
             <Label text="Order Type" />
             <MultiInput
                 id="idOrderType"
-                width="60%"
                 showValueHelp="false"
-                valueHelpRequest=".onValueHelpRequested"
-                suggestionItemSelected=".onOrderTypeSuggestionItemPress"
-                suggestionRows="{
-				path: '/Order_TYpeSet'
-			}"
-            >
-                <suggestionColumns>
-                    <Column>
-                        <Label text="Order Type" />
-                    </Column>
-                    <Column>
-                        <Label text="Description" />
-                    </Column>
-                </suggestionColumns>
-                <suggestionRows>
-                    <ColumnListItem>
-                        <Label text="{OrderType}" />
-                        <Label text="{Description}" />
-                    </ColumnListItem>
-                </suggestionRows>
-            </MultiInput>
-            <!-- <Label text="Funcational Location" />
-            <MultiInput
-                width="70%"
-                selectedKey=""
-                showClearIcon="true"
-                showValueHelp="true"
-            /> -->
+                width="60%"
+                value="{oSelectionModel>/0/aSelOrderType}"
+                editable="false"
+            />
             <Label text="Mainwork Center" />
             <MultiInput
                 id="idMainWorkCenter"
@@ -125,9 +101,6 @@
         </f:content>
     </f:SimpleForm>
 </core:FragmentDefinition>
-       
-
-
 <!-- <VBox>
  <smartForm:SmartForm
             editable="true"

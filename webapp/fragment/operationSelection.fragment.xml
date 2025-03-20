@@ -49,7 +49,7 @@
                     </ColumnListItem>
                 </suggestionRows>
             </MultiInput>
-            <Label text="Operation Activity Type" />
+            <!-- <Label text="Operation Activity Type" />
             <MultiInput
                 id="idOpActivity"
                 width="60%"
@@ -59,8 +59,8 @@
                 suggestionRows="{
 				path: '/Operation_Activity_TypeSet'
 			}"
-            >
-                <suggestionColumns>
+            > -->
+            <!-- <suggestionColumns>
                     <Column>
                         <Label text="Activity Type" />
                     </Column>
@@ -74,9 +74,10 @@
                         <Label text="{MainDescription}" />
                     </ColumnListItem>
                 </suggestionRows>
-            </MultiInput>
+            </MultiInput> -->
             <Label text="Actual finish date" />
             <DatePicker
+                width="70%"
                 value="oSelectionModel>/sActualFinishDate"
                 minDate="{oSelectionModel>/minDate}"
                 valueFormat="YYYYddMM"

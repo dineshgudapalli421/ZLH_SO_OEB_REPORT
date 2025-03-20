@@ -121,13 +121,7 @@
         {
           "name": "Routeselection",
           "pattern": ":?query:",
-          "target": [
-            "Targetselection"
-          ]
-        },
-        {
-          "name": "OEBReport",
-          "pattern": ":?query:",
+          "cacheControl": "cache",
           "target": [
             "Targetselection"
           ]
@@ -135,6 +129,7 @@
         {
           "name": "OEBReport",
           "pattern": "OEBReport",
+          "cacheControl": "cache",
           "target": [
             "OEBReport"
           ]
@@ -144,14 +139,14 @@
         "Targetselection": {
           "viewType": "XML",
           "transition": "slide",
-          "clearControlAggregation": false,
+          "cacheControl": "cache",
           "viewId": "selection",
           "viewName": "selection"
         },
         "OEBReport": {
           "viewType": "XML",
           "transition": "slide",
-          "clearControlAggregation": false,
+          "cacheControl": "cache",
           "viewId": "oebReport",
           "viewName": "oebReport"
         }
