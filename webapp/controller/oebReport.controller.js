@@ -428,33 +428,68 @@ sap.ui.define([
                 }
             },
             onPressOrderNo: function (oEvent) {
-                var oCrossAppNav = sap.ushell.Container.getService("Navigation");
-                var oSource = oEvent.getSource();
-                var oTarget = {
-                    target: { semanticObject: "MaintenanceOrder", action: "change" },
-                    params: {
-                        "AUFNR": oSource.getText(),
-                        "sap-app-origin-hint": '',
-                        "sap-ui-tech-hint": "GUI",
-                        "sap-ushell-navmode": "inplace"
-                    }
+                let oSource = oEvent.getSource();
+                let oOrderNo = oSource.getText();
+                if (oOrderNo) {
+                    var navigationService = sap.ushell.Container.getService("CrossApplicationNavigation");
+                    var hash = (navigationService && navigationService.hrefForExternal({
+                        target: { semanticObject: "MaintenanceOrder", action: "change" },
+                        params: {
+                            "AUFNR": oOrderNo,
+                            "sap-app-origin-hint": '',
+                            "sap-ui-tech-hint": "GUI",
+                            "sap-ushell-navmode": "inplace"
+                        }
+                    })) || "";
+
+                    var url = window.location.href.split('#')[0] + hash;
+                    sap.m.URLHelper.redirect(url, true);
                 }
-                oCrossAppNav.navigate(oTarget, oController.getOwnerComponent());
+
+                // var oCrossAppNav = sap.ushell.Container.getService("Navigation");
+                // var oSource = oEvent.getSource();
+                // var oTarget = {
+                //     target: { semanticObject: "MaintenanceOrder", action: "change" },
+                //     params: {
+                //         "AUFNR": oSource.getText(),
+                //         "sap-app-origin-hint": '',
+                //         "sap-ui-tech-hint": "GUI",
+                //         "sap-ushell-navmode": "inplace"
+                //     }
+                // }
+                // oCrossAppNav.navigate(oTarget, oController.getOwnerComponent());
             },
 
             onPressNotification: function (oEvent) {
-                var oCrossAppNav = sap.ushell.Container.getService("Navigation");
-                var oSource = oEvent.getSource();
-                var oTarget = {
-                    target: { semanticObject: "MaintenanceNotification", action: "change" },
-                    params: {
-                        "QMNUM": oSource.getText(),
-                        "sap-app-origin-hint": '',
-                        "sap-ui-tech-hint": "GUI",
-                        "sap-ushell-navmode": "inplace"
-                    }
+                let oSource = oEvent.getSource();
+                const oNotification = oSource.getText();
+                if (oNotification) {
+                    var navigationService = sap.ushell.Container.getService("CrossApplicationNavigation");
+                    var hash = (navigationService && navigationService.hrefForExternal({
+                        target: { semanticObject: "MaintenanceNotification", action: "change" },
+                        params: {
+                            "QMNUM": oNotification,
+                            "sap-app-origin-hint": '',
+                            "sap-ui-tech-hint": "GUI",
+                            "sap-ushell-navmode": "inplace"
+                        }
+                    })) || "";
+
+                    var url = window.location.href.split('#')[0] + hash;
+                    sap.m.URLHelper.redirect(url, true);
                 }
-                oCrossAppNav.navigate(oTarget, oController.getOwnerComponent());
+                // var oCrossAppNav = sap.ushell.Container.getService("Navigation");
+                // var oSource = oEvent.getSource();
+                // var oTarget = {
+                //     target: { semanticObject: "MaintenanceNotification", action: "change" },
+                //     params: {
+                //         "QMNUM": oSource.getText(),
+                //         "sap-app-origin-hint": '',
+                //         "sap-ui-tech-hint": "GUI",
+                //         "sap-ushell-navmode": "inplace"
+                //     }
+                // }
+                // oCrossAppNav.navigate(oTarget, oController.getOwnerComponent());
             }
 
         });
