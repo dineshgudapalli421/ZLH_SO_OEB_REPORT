@@ -28,6 +28,31 @@
                 id="idOpWorkCenter"
                 width="70%"
                 showValueHelp="false"
+                valueHelpRequest=".onValueHelpRequested"
+                suggestionItemSelected=".onOperationWCSuggestionItemPress"
+                suggestionRows="{
+				path: '/Main_Work_CenterSet'
+			}"
+            >
+                <suggestionColumns>
+                    <Column>
+                        <Label text="Main Work Center" />
+                    </Column>
+                    <Column>
+                        <Label text="Description" />
+                    </Column>
+                </suggestionColumns>
+                <suggestionRows>
+                    <ColumnListItem>
+                        <Label text="{MainWorkCenter}" />
+                        <Label text="{Description}" />
+                    </ColumnListItem>
+                </suggestionRows>
+            </MultiInput>
+            <!-- <MultiInput
+                id="idOpWorkCenter"
+                width="70%"
+                showValueHelp="false"
                 showClearIcon="true"
                 suggestionItemSelected=".onOpWorkCenterPress"
                 suggestionRows="{
@@ -48,7 +73,7 @@
                         <Label text="{ORDModel>DESCRIPTION}" />
                     </ColumnListItem>
                 </suggestionRows>
-            </MultiInput>
+            </MultiInput> -->
             <!-- <Label text="Operation Activity Type" />
             <MultiInput
                 id="idOpActivity"

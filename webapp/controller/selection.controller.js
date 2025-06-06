@@ -34,28 +34,58 @@ sap.ui.define([
                     aSelOrders: [],
                     aSelOrderType: ["MS01"],
                     aSelMainWC: [],
-                    OrderStatus: [{ Key: 'OUTS', description: 'Outstanding' },
-                    { Key: 'INPR', description: 'In Process' },
-                    { Key: 'COMP', description: 'Completed' },
-                    { Key: 'Hist', description: 'Historical' },
-                    { Key: 'OEBE', description: 'OEB Exception' }],
+                    OrderStatus: [
+                        { Key: "HOLD", description: "Hold" },
+                        { Key: "SRDE", description: "Site Readiness Date entered" },
+                        { Key: "RCC", description: "Ready for Customer Confirm" },
+                        { Key: "TRFD", description: "Trenching Ready for Dispatch" },
+                        { Key: "ASSN", description: "Assigned" },
+                        { Key: "DISP", description: "Dispatched" },
+                        { Key: "SINR", description: "Site Not Ready" },
+                        { Key: "RSRD", description: "Request Site Readiness Date" },
+                        { Key: "CNDI", description: "Cancel Dispatch" },
+                        { Key: "TCOM", description: "Trenching Complete" },
+                        { Key: "IRFD", description: "Install Ready for Dispatch" },
+                        { Key: "MCOM", description: "Meter Install Complete" },
+                        { Key: "RVWP", description: "Review Pending" },
+                        { Key: "RVWC", description: "Review Complete" }
+                    ],
                     OperationStatus: [
-                        {
-                            Key: 'HOLD',
-                            description: 'hold'
-                        }, {
-                            Key: 'RCC',
-                            description: 'ready for customer confirm'
-                        }, {
-                            Key: 'DISP',
-                            description: 'DISPATCHED'
-                        }, {
-                            Key: 'RDFD',
-                            description: 'Ready for dispatch'
-                        }, {
-                            Key: 'COMP',
-                            description: 'Completed'
-                        }]
+                        { Key: "CNCL", description: "Cancel/Closed" },
+                        { Key: "ESAR", description: "ESA Required" },
+                        { Key: "ASGD", description: "Assigned" },
+                        { Key: "SCHD", description: "Scheduled" },
+                        { Key: "RDFD", description: "Ready for Dispatch" },
+                        { Key: "DISP", description: "Dispatched" },
+                        { Key: "CNDI", description: "Cancel Dispatch" },
+                        { Key: "TRKA", description: "Truck Assigned" },
+                        { Key: "ONST", description: "On Site" },
+                        { Key: "WKCO", description: "Work Completed" },
+                        { Key: "FINC", description: "Field Incomplete" },
+                        { Key: "ERRD", description: "Error In Dispatch" }
+                    ]
+                    // OrderStatus: [{ Key: 'OUTS', description: 'Outstanding' },
+                    // { Key: 'INPR', description: 'In Process' },
+                    // { Key: 'COMP', description: 'Completed' },
+                    // { Key: 'Hist', description: 'Historical' },
+                    // { Key: 'OEBE', description: 'OEB Exception' }],
+                    // OperationStatus: [
+                    //     {
+                    //         Key: 'HOLD',
+                    //         description: 'hold'
+                    //     }, {
+                    //         Key: 'RCC',
+                    //         description: 'ready for customer confirm'
+                    //     }, {
+                    //         Key: 'DISP',
+                    //         description: 'DISPATCHED'
+                    //     }, {
+                    //         Key: 'RDFD',
+                    //         description: 'Ready for dispatch'
+                    //     }, {
+                    //         Key: 'COMP',
+                    //         description: 'Completed'
+                    //     }]
                 });
                 oController.getOwnerComponent().setModel(oModel, "GlobalOEBModel");
                 oController.getView().setModel(oSelectionModel, "oSelectionModel");
@@ -66,6 +96,7 @@ sap.ui.define([
             },
 
             onPressNext: function () {
+                debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var sPath = "/OEB_OPSSet";
                 oModel.setProperty("/bPageBusy", true);
@@ -205,6 +236,7 @@ sap.ui.define([
             },
 
             _fnReturnFilterparameter: function () {
+                debugger;
                 var oView = oController.getView();
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var OrderStatus = oModel.getProperty("/OrderStatusSelected"); // oController._getTockens();
@@ -213,7 +245,7 @@ sap.ui.define([
                 var aFunLoc = [];
                 var aMainWorkCenter = oController._getTockens(oView.byId("idMainWorkCenter"));
                 var aPeriod = [];
-                var aOpeWorkCenter = [];
+                var aOpeWorkCenter = oController._getTockens(oView.byId("idOpWorkCenter"));
                 var aOpActivityType = [];
                 var ActualFinishDate = oModel.getProperty("/sActualFinishDate"); //need to correct
                 var OperationStatus = oModel.getProperty("/OperationStatusSelected");
@@ -246,6 +278,11 @@ sap.ui.define([
             onMainWCSuggestionItemPress: function (oEvent) {
                 var oSelectedItem = oEvent.getParameter("selectedRow");
                 var oMultiInput = oController.getView().byId("idMainWorkCenter");
+                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
+            },
+            onOperationWCSuggestionItemPress: function (oEvent) {
+                var oSelectedItem = oEvent.getParameter("selectedRow");
+                var oMultiInput = oController.getView().byId("idOpWorkCenter");
                 oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
             },
             onOrderTypeSuggestionItemPress: function (oEvent) {
