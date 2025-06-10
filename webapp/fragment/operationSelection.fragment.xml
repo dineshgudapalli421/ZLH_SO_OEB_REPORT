@@ -102,10 +102,11 @@
             </MultiInput> -->
             <Label text="Actual finish date" />
             <DatePicker
+                id="idActualFinishDate"
                 width="70%"
                 value="oSelectionModel>/sActualFinishDate"
                 minDate="{oSelectionModel>/minDate}"
-                valueFormat="YYYYddMM"
+                valueFormat="yyyy-MM-dd"
             />
         </f:content>
     </f:SimpleForm>

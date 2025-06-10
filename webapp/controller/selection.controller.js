@@ -247,7 +247,7 @@ sap.ui.define([
                 var aPeriod = [];
                 var aOpeWorkCenter = oController._getTockens(oView.byId("idOpWorkCenter"));
                 var aOpActivityType = [];
-                var ActualFinishDate = oModel.getProperty("/sActualFinishDate"); //need to correct
+                var ActualFinishDate = oView.byId("idActualFinishDate").getValue() ? [oView.byId("idActualFinishDate").getValue()] : undefined;//oModel.getProperty("/sActualFinishDate"); //need to correct
                 var OperationStatus = oModel.getProperty("/OperationStatusSelected");
 
                 function createOrFilter(arr, field) {
@@ -264,7 +264,7 @@ sap.ui.define([
                 var afilterPeriod = createOrFilter(aPeriod, "Period"); // change Filed name 
                 var afilterOpWorkCenter = createOrFilter(aOpeWorkCenter, "OP_WORKCENTER");
                 var afilterOpActivity = createOrFilter(aOpActivityType, "OP_ACTIVITY"); // change Filed name 
-                var afilterActualFinishDate = createOrFilter(ActualFinishDate, "ActualFinsihDate"); // change Filed name 
+                var afilterActualFinishDate = createOrFilter(ActualFinishDate, "ActFinish"); // change Filed name 
                 var afilterOpSTATUS = createOrFilter(OperationStatus, "OP_STATUS"); // change Filed name 
                 var allFilters = [afilterOrdStatus, afilterOrderNo, afilterOrderType, afilterFunLoc, afilterWorkCenter,
                     afilterPeriod, afilterOpWorkCenter, afilterOpActivity, afilterActualFinishDate, afilterOpSTATUS].filter(f => f !== null);
