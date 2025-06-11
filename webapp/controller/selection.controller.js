@@ -48,7 +48,8 @@ sap.ui.define([
                         { Key: "IRFD", description: "Install Ready for Dispatch" },
                         { Key: "MCOM", description: "Meter Install Complete" },
                         { Key: "RVWP", description: "Review Pending" },
-                        { Key: "RVWC", description: "Review Complete" }
+                        { Key: "RVWC", description: "Review Complete" },
+                        { Key: "OEBE", description: "OEB Exception" }
                     ],
                     OperationStatus: [
                         { Key: "CNCL", description: "Cancel/Closed" },

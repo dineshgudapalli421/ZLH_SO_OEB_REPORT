@@ -186,7 +186,7 @@
                     >
                         <m:Label text="Act.finish" />
                         <template>
-                            <m:Label text="{OEBReportModel>ActFinish }" />
+                            <m:Label text="{OEBReportModel>ActFinish}" />
                         </template>
                     </Column>
                     <Column
