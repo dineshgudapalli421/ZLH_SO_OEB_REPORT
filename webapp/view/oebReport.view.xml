@@ -195,7 +195,7 @@
                     >
                         <m:Label text="Counter - No of day remaining" />
                         <template>
-                            <m:Label text="{OEBReportModel>CounterTime}" />
+                            <m:Label text="{OEBReportModel>CounterDays}" />
                         </template>
                     </Column>
                 </columns>
