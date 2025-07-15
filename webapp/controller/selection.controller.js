@@ -7,12 +7,14 @@ sap.ui.define([
     "sap/ui/model/json/JSONModel",
     "sap/m/Token",
     "sap/ui/table/Column",
-    "sap/m/Label"
+    "sap/m/Label",
+    "sap/ushell/services/PersonalizationV2",
+    "sap/ui/model/type/Date"
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel, Token, UIColumn, Label) {
+    function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel, Token, UIColumn, Label, PersonalizationV2, DateType) {
         "use strict";
         var oRouter, oController, oSelectionScreenModel, oOEBoDataModel, oResourceBundle, UIComponent;
         return Controller.extend("com.sap.lh.cs.zlhoebreport.controller.selection", {
@@ -22,12 +24,14 @@ sap.ui.define([
                 oRouter = oController.getOwnerComponent().getRouter();
                 UIComponent = oController.getOwnerComponent();
                 var oModel = new JSONModel({});
+                let oMinDate = new Date();
+                let dateType = new DateType({ pattern: "yyyy-MM-dd" });
                 var oSelectionModel = new JSONModel({
                     bPageBusy: false,
                     OrderNo: [],
                     OrderStatusSelected: [],
                     OperationStatusSelected: [],
-                    minDate: new Date(),
+                    minDate: new Date(),//dateType.formatValue(oMinDate, "string"),
                     sActualFinishDate: "",
                     aSelOpWorkCenter: [],
                     aSelOpActivity: [],
@@ -94,6 +98,230 @@ sap.ui.define([
                 oInput.setTokens([
                     new Token({ text: "MS01", key: "MS01" }),
                 ]);
+                oController._initPersonalizationService();
+            },
+            _initPersonalizationService: function () {
+                debugger;
+                var oView = this.getView();
+                var oVariantManagement = oView.byId("idOEBVariantManagement");
+                sap.ushell.Container.getServiceAsync("Personalization").then(function (oPersonalizationService) {
+                    var oPersId = {
+                        container: "OEBInputFieldVariants",
+                        item: "OEBInputFields"
+                    };
+                    oPersonalizationService.getContainer(oPersId.container).then(function (oContainer) {
+                        this._oContainer = oContainer;
+                        var oVariantSet = oContainer.getItemValue(oPersId.item) || { variants: [], defaultVariant: "" };
+                        this._loadVariants(oVariantSet);
+
+                        oVariantManagement.setModel(new JSONModel(oVariantSet.variants), "variantItems");
+                        oVariantManagement.setDefaultVariantKey(oVariantSet.defaultVariant);
+
+                        this._applyVariant(oVariantSet.defaultVariant, oController._defaultVariantName);
+                    }.bind(this)).catch(function (oError) {
+                        MessageToast.show("Error Loading Personalization Container:" + oError.message);
+                    });
+                }.bind(this)).catch(function (oError) {
+                    MessageToast.show("Error accessing personalization service: " + oError.message);
+                });
+            },
+            _loadVariants: function (oVariantSet) {
+                debugger;
+                var oVM = oController.getView().byId("idOEBVariantManagement");
+                var defaultVariant = oController._fngetDefaultVariant(oVM);
+                oController._defaultVariantKey = defaultVariant;
+                oVariantSet.variants.forEach(function (oVariant) {
+                    oVM.addVariantItem({
+                        key: oVariant.key,
+                        text: oVariant.text,
+                        readOnly: false,
+                        executeOnSelection: true
+                    });
+                });
+                //oController.getView().getModel("FieldMonSelModel").setProperty("/Variants", aVariants);
+            },
+            _fngetDefaultVariant: function (VM) {
+                var objVariant = {}, objVariantItems = [], defaultVariant = '';
+                objVariant = VM.oContext.getModel().getData();
+                defaultVariant = objVariant["selection--idOEBVariantManagement"].defaultVariant;
+                objVariantItems = objVariant["selection--idOEBVariantManagement"].variants;
+                for (var i = 0; i < objVariantItems.length; i++) {
+                    if (defaultVariant === objVariantItems[i].key) {
+                        oController._defaultVariantName = objVariantItems[i].title;
+                    }
+                }
+                return defaultVariant;
+            },
+            _applyVariant: function (sVariantKey, sName) {
+                debugger;
+                var oVariantModel = oController.getView().getModel("oSelectionModel");
+                var oVariantSet = this._oContainer.getItemValue("variantSet") || { "variants": [] };
+                var oDefaultVariant = oVariantSet.defaultVariant;
+
+                var oVariant = oVariantSet.variants.find(function (v) {
+                    if (sName === '' && sVariantKey !== '') {
+                        return v.key === sVariantKey;
+                    }
+                    else if (sName === '' && sVariantKey === '') {
+                        return v.key === oDefaultVariant;
+                    }
+                    // else if (sName !== '' && sVariantKey !== '') {
+                    //     return v.text === sName && v.key === sVariantKey;
+                    // }
+                    else {
+                        return v.text === sName;
+                    }
+                });
+
+                if (oVariant) {
+                    var objServiceOrder = [], objSelMainWC = [], objSelOpWorkCenter = [];
+                    var oData = oVariant.data;
+                    oVariantModel.setData(oData, true);
+                    objServiceOrder = oVariantModel.getProperty("/aSelOrders");
+                    objSelMainWC = oVariantModel.getProperty("/aSelMainWC");
+                    objSelOpWorkCenter = oVariantModel.getProperty("/aSelOpWorkCenter");
+
+
+                    if (objServiceOrder.length > 0) oController._fnBindVariantSelectionFields(objServiceOrder, 'idServiceOrder');
+                    if (objSelMainWC.length > 0) oController._fnBindVariantSelectionFields(objSelMainWC, 'idMainWorkCenter');
+                    if (objSelOpWorkCenter.length > 0) oController._fnBindVariantSelectionFields(objSelOpWorkCenter, 'idOpWorkCenter');
+                }
+            },
+            _fnBindVariantSelectionFields: function (objSelection, objId) {
+                for (var i = 0; i < objSelection.length; i++) {
+                    var oMultiInput = oController.getView().byId(objId);
+                    var aToken = new Token({
+                        key: objSelection[i].key,
+                        text: objSelection[i].text,
+                    });
+
+                    oMultiInput.addToken(aToken);
+                    oMultiInput.setValue("");
+                }
+            },
+            onSaveVariant: function (oEvent) {
+                debugger;
+                var oParameters = oEvent.getParameters();
+                var sVariantKey = oParameters.key || Date.now().toString();
+                var sVariantText = oParameters.name;
+                var bOverwrite = oParameters.overwrite;
+                var bDefault = oParameters.def;
+                var oVariantData = oController.getView().getModel("oSelectionModel").getData();
+
+                var oVariantSet = this._oContainer.getItemValue("variantSet") || { "variants": [], defaultVariant: "" }
+
+                var oVariantManagement = oController.getView().byId("idOEBVariantManagement");
+                if (bOverwrite) {
+                    var oExistingVariant = oVariantSet.variants.find(function (v) {
+                        return v.key === sVariantKey;
+                    });
+                    if (oExistingVariant) {
+                        oExistingVariant.text = sVariantText;
+                        oExistingVariant.data = oVariantData;
+                    }
+                } else {
+                    oVariantSet.variants.push({
+                        key: sVariantKey,
+                        text: sVariantText,
+                        data: oVariantData,
+                        visible: true
+                    });
+                }
+                if (bDefault) {
+                    oVariantSet.defaultVariant = sVariantKey;
+                    oVariantManagement.setDefaultVariantKey(sVariantKey);
+                }
+                this._oContainer.setItemValue("variantSet", oVariantSet);
+                this._oContainer.save().then(function () {
+                    MessageToast.show("Variant saved successfully!");
+                }).catch(function (oError) {
+                    MessageToast.show("Error saving variant:" + oError.message);
+                });
+
+
+            },
+            onSelectVariant: function (oEvent) {
+                debugger;
+                var sVariantKey = oEvent.getParameter("key");
+                var objVariant = {}, objVariantItems = [], oName = '';
+                objVariant = oEvent.getSource().oContext.getModel().getData();
+                objVariantItems = objVariant["selection--idOEBVariantManagement"].variants;
+
+                for (var i = 0; i < objVariantItems.length; i++) {
+                    if (sVariantKey === objVariantItems[i].key) {
+                        oName = objVariantItems[i].title;
+                    }
+                }
+                if (sVariantKey === 'selection--idOEBVariantManagement') {
+                    window.location.reload();
+                }
+                else {
+                    //var objVariant = [];
+                    var oVariantModel = oController.getView().getModel("oSelectionModel");
+                    oVariantModel.setData({});
+                    oController._fnSetEmptySelectedFields('idServiceOrder');
+                    oController._fnSetEmptySelectedFields('idMainWorkCenter');
+                    oController._fnSetEmptySelectedFields('idOpWorkCenter');
+                }
+
+                this._applyVariant(sVariantKey, oName);
+            },
+            _fnSetEmptySelectedFields: function (objId) {
+                debugger;
+                var oMultiInput = oController.getView().byId(objId);
+                oMultiInput.removeAllTokens();
+                oMultiInput.setValue("");
+            },
+            onManageVariant: function (oEvent) {
+                debugger;
+                var objVariant = {}, objVariantItems = [], oName = '';
+                objVariant = oEvent.getSource().oContext.getModel().getData();
+                objVariantItems = objVariant["selection--idOEBVariantManagement"].variants;
+
+                var oParameters = oEvent.getParameters();
+                var aRenamed = oEvent.getParameter("renamed");
+                var aDeleted = oEvent.getParameter("deleted");
+                var oVariantSet = this._oContainer.getItemValue("variantSet") || { variants: [] };
+                if (aDeleted !== undefined) {
+                    oParameters.deleted.forEach(function (sKey) {
+                        debugger;
+                        for (var i = 0; i < objVariantItems.length; i++) {
+                            if (sKey !== objVariantItems[i].key) {
+                                oName = objVariantItems[i].title;
+                                oVariantSet.variants = oVariantSet.variants.filter(function (v) {
+                                    return v.text === oName;
+                                });
+                            }
+                        }
+                    });
+                }
+                if (aRenamed !== undefined) {
+                    oParameters.renamed.forEach(function (oRenamed) {
+                        for (var i = 0; i < objVariantItems.length; i++) {
+                            if (oRenamed.key === objVariantItems[i].key) {
+                                oName = objVariantItems[i].title;
+                                var oVariant = oVariantSet.variants.find(function (v) {
+                                    return v.text === oName;
+                                });
+                                if (oVariant) {
+                                    oVariant.text = oRenamed.name;
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (oParameters.def) {
+                    oVariantSet.defaultVariant = oParameters.def;
+                    oController.getView().byId("idOEBVariantManagement").setDefaultVariantKey(oParameters.def);
+                }
+                this._oContainer.setItemValue("variantSet", oVariantSet);
+                this._oContainer.save().then(function () {
+                    MessageToast.show("Variants managed successfully!");
+                }).catch(function (oError) {
+                    MessageToast.show("Error managing variants:" + oError.message);
+                });
+
             },
 
             onPressNext: function () {
@@ -211,12 +439,12 @@ sap.ui.define([
                     this._oValueHelpDialog = oDialog;
                 }.bind(this));
             },
-            onOrderNumberOkPress: function (oEvent) {
-                var oMultiInput = oController.getView().byId("idServiceOrder");
-                var aTokens = oEvent.getParameter("tokens");
-                oMultiInput.setTokens(aTokens);
-                this._oValueHelpDialog.close();
-            },
+            // onOrderNumberOkPress: function (oEvent) {
+            //     var oMultiInput = oController.getView().byId("idServiceOrder");
+            //     var aTokens = oEvent.getParameter("tokens");
+            //     oMultiInput.setTokens(aTokens);
+            //     this._oValueHelpDialog.close();
+            // },
             onOrderNumberCancelPress: function () {
                 this._oValueHelpDialog.close();
             },
@@ -248,7 +476,9 @@ sap.ui.define([
                 var aPeriod = [];
                 var aOpeWorkCenter = oController._getTockens(oView.byId("idOpWorkCenter"));
                 var aOpActivityType = [];
-                var ActualFinishDate = oView.byId("idActualFinishDate").getValue() ? [oView.byId("idActualFinishDate").getValue()] : undefined;//oModel.getProperty("/sActualFinishDate"); //need to correct
+                var ActualFinishDate = oView.byId("idActualFinishDate").getValue() ? [oView.byId("idActualFinishDate").getValue()] : '';
+                //oModel.getProperty("/sActualFinishDate") ? [oModel.getProperty("/sActualFinishDate")]: '';
+                //oView.byId("idActualFinishDate").getValue() ? [oView.byId("idActualFinishDate").getValue()] : '';//oModel.getProperty("/sActualFinishDate"); //need to correct
                 var OperationStatus = oModel.getProperty("/OperationStatusSelected");
 
                 function createOrFilter(arr, field) {
@@ -276,26 +506,26 @@ sap.ui.define([
                 var oMultiInput = oController.getView().byId("idOpActivity");
                 oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
             },
-            onMainWCSuggestionItemPress: function (oEvent) {
-                var oSelectedItem = oEvent.getParameter("selectedRow");
-                var oMultiInput = oController.getView().byId("idMainWorkCenter");
-                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
-            },
-            onOperationWCSuggestionItemPress: function (oEvent) {
-                var oSelectedItem = oEvent.getParameter("selectedRow");
-                var oMultiInput = oController.getView().byId("idOpWorkCenter");
-                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
-            },
+            // onMainWCSuggestionItemPress: function (oEvent) {
+            //     var oSelectedItem = oEvent.getParameter("selectedRow");
+            //     var oMultiInput = oController.getView().byId("idMainWorkCenter");
+            //     oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
+            // },
+            // onOperationWCSuggestionItemPress: function (oEvent) {
+            //     var oSelectedItem = oEvent.getParameter("selectedRow");
+            //     var oMultiInput = oController.getView().byId("idOpWorkCenter");
+            //     oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
+            // },
             onOrderTypeSuggestionItemPress: function (oEvent) {
                 var oSelectedItem = oEvent.getParameter("selectedRow");
                 var oMultiInput = oController.getView().byId("idOrderType");
                 oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
             },
-            onOrderSuggestionItemPress: function (oEvent) {
-                var oSelectedItem = oEvent.getParameter("selectedRow");
-                var oMultiInput = oController.getView().byId("idServiceOrder");
-                oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
-            },
+            // onOrderSuggestionItemPress: function (oEvent) {
+            //     var oSelectedItem = oEvent.getParameter("selectedRow");
+            //     var oMultiInput = oController.getView().byId("idServiceOrder");
+            //     oController.onSuggestionItemSelected(oSelectedItem, oMultiInput);
+            // },
             onOpWorkCenterPress: function (oEvent) {
                 var oSelectedItem = oEvent.getParameter("selectedRow");
                 var oMultiInput = oController.getView().byId("idOpWorkCenter");
@@ -309,6 +539,178 @@ sap.ui.define([
                 });
                 oMultiInput.addToken(oToken);
                 oMultiInput.setValue("");
+            },
+            onOrderNumberOkPress: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var oMultiInput = oController.getView().byId("idServiceOrder");
+                var aTokens = oEvent.getParameter("tokens");
+                oMultiInput.setTokens(aTokens);
+                oModel.setProperty("/aSelOrders", []);
+                var aSelectedKeys = oModel.getProperty("/aSelOrders");
+                aTokens.forEach(function (oToken) {
+                    var sKey = oToken.getKey();
+                    var sText = oToken.getText();
+                    if (!aSelectedKeys.includes(sKey)) {
+                        aSelectedKeys.push({ "key": sKey, "text": sText });
+                        //aSelectedKeys.push(sKey);
+                    }
+                });
+                oModel.setProperty("/aSelOrders", aSelectedKeys);
+                this._oValueHelpDialog.close();
+            },
+            onOrderSuggestionItemPress: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var oMultiInput = oController.getView().byId("idServiceOrder");
+                var oSelectedItem = oEvent.getParameter("selectedRow");
+                var oSelectedCells = oSelectedItem.getCells();
+                var aToken = new Token({
+                    key: oSelectedCells[1].getText(),
+                    text: oSelectedCells[0].getText()
+                });
+
+                oMultiInput.addToken(aToken);
+                oMultiInput.setValue("");
+
+                var aTokens = oMultiInput.getTokens();
+                oModel.setProperty("/aSelOrders", []);
+                var aSelectedKeys = oModel.getProperty("/aSelOrders");
+                aTokens.forEach(function (oToken) {
+                    var sKey = oToken.getKey();
+                    var sText = oToken.getText();
+                    if (!aSelectedKeys.includes(sKey)) {
+                        aSelectedKeys.push({ "key": sKey, "text": sText });
+                        //aSelectedKeys.push(sKey);
+                    }
+                });
+                oModel.setProperty("/aSelOrders", aSelectedKeys);
+            },
+
+            onMainWCSuggestionItemPress: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var oMultiInput = oController.getView().byId("idMainWorkCenter");
+                var oSelectedItem = oEvent.getParameter("selectedRow");
+                var oSelectedCells = oSelectedItem.getCells();
+                var aToken = new Token({
+                    key: oSelectedCells[1].getText(),
+                    text: oSelectedCells[0].getText()
+                });
+
+                oMultiInput.addToken(aToken);
+                oMultiInput.setValue("");
+
+                var aTokens = oMultiInput.getTokens();
+                oModel.setProperty("/aSelMainWC", []);
+                var aSelectedKeys = oModel.getProperty("/aSelMainWC");
+                aTokens.forEach(function (oToken) {
+                    var sKey = oToken.getKey();
+                    var sText = oToken.getText();
+                    if (!aSelectedKeys.includes(sKey)) {
+                        aSelectedKeys.push({ "key": sKey, "text": sText });
+                        //aSelectedKeys.push(sKey);
+                    }
+                });
+                oModel.setProperty("/aSelMainWC", aSelectedKeys);
+
+            },
+
+            onOperationWCSuggestionItemPress: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var oMultiInput = oController.getView().byId("idOpWorkCenter");
+                var oSelectedItem = oEvent.getParameter("selectedRow");
+                var oSelectedCells = oSelectedItem.getCells();
+                var aToken = new Token({
+                    key: oSelectedCells[1].getText(),
+                    text: oSelectedCells[0].getText()
+                });
+
+                oMultiInput.addToken(aToken);
+                oMultiInput.setValue("");
+
+                var aTokens = oMultiInput.getTokens();
+                oModel.setProperty("/aSelOpWorkCenter", []);
+                var aSelectedKeys = oModel.getProperty("/aSelOpWorkCenter");
+                aTokens.forEach(function (oToken) {
+                    var sKey = oToken.getKey();
+                    var sText = oToken.getText();
+                    if (!aSelectedKeys.includes(sKey)) {
+                        aSelectedKeys.push({ "key": sKey, "text": sText });
+                        //aSelectedKeys.push(sKey);
+                    }
+                });
+                oModel.setProperty("/aSelOpWorkCenter", aSelectedKeys);
+            },
+
+            onOrderNoTokenUpdate: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var oMultiInput = oController.getView().byId("idServiceOrder");
+                var sAction = oEvent.getParameter("type");
+                var oToken = oEvent.getParameters().removedTokens[0].getKey();
+                var aTokens = oMultiInput.getTokens();
+
+                var aTokenData = [], aSelectedData = [];
+                if (sAction === "removed") {
+                    aTokenData = aTokens.filter(function (token) {
+                        return token.getKey() !== oToken;
+                    });
+                }
+                for (var i = 0; i < aTokenData.length; i++) {
+                    aSelectedData.push({ "key": aTokenData[i].getKey(), "text": aTokenData[i].getText() });
+                }
+
+                oModel.setProperty("/aSelOrders", aSelectedData);
+            },
+            onMainWCTokenUpdate: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var oMultiInput = oController.getView().byId("idMainWorkCenter");
+                var sAction = oEvent.getParameter("type");
+                var oToken = oEvent.getParameters().removedTokens[0].getKey();
+                var aTokens = oMultiInput.getTokens();
+
+                var aTokenData = [], aSelectedData = [];
+                if (sAction === "removed") {
+                    aTokenData = aTokens.filter(function (token) {
+                        return token.getKey() !== oToken;
+                    });
+                }
+                for (var i = 0; i < aTokenData.length; i++) {
+                    aSelectedData.push({ "key": aTokenData[i].getKey(), "text": aTokenData[i].getText() });
+                }
+
+                oModel.setProperty("/aSelMainWC", aSelectedData);
+            },
+            onOperationWCTokenUpdate: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var oMultiInput = oController.getView().byId("idOpWorkCenter");
+                var sAction = oEvent.getParameter("type");
+                var oToken = oEvent.getParameters().removedTokens[0].getKey();
+                var aTokens = oMultiInput.getTokens();
+
+                var aTokenData = [], aSelectedData = [];
+                if (sAction === "removed") {
+                    aTokenData = aTokens.filter(function (token) {
+                        return token.getKey() !== oToken;
+                    });
+                }
+                for (var i = 0; i < aTokenData.length; i++) {
+                    aSelectedData.push({ "key": aTokenData[i].getKey(), "text": aTokenData[i].getText() });
+                }
+
+                oModel.setProperty("/aSelOpWorkCenter", aSelectedData);
+            },
+
+            onDateChange: function (oEvent) {
+                debugger;
+                var oModel = oController.getView().getModel("oSelectionModel");
+                var oDatePicker = oEvent.getSource();
+                var sNewValue = oEvent.getParameter("newValue");
+                oModel.setProperty("/sActualFinishDate", sNewValue);
             }
         });
 

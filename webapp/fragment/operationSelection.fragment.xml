@@ -30,6 +30,7 @@
                 showValueHelp="false"
                 valueHelpRequest=".onValueHelpRequested"
                 suggestionItemSelected=".onOperationWCSuggestionItemPress"
+                tokenUpdate=".onOperationWCTokenUpdate"
                 suggestionRows="{
 				path: '/Main_Work_CenterSet'
 			}"
@@ -100,13 +101,16 @@
                     </ColumnListItem>
                 </suggestionRows>
             </MultiInput> -->
+             <!-- value="oSelectionModel>/sActualFinishDate" {oSelectionModel>/minDate}-->
+             <!-- value="{path: 'oSelectionModel>/sActualFinishDate', type: 'sap.ui.model.type.Date', formatOptions: {pattern: 'yyyy-MM-dd'}}" -->
             <Label text="Actual finish date" />
             <DatePicker
                 id="idActualFinishDate"
                 width="70%"
-                value="oSelectionModel>/sActualFinishDate"
-                minDate="{oSelectionModel>/minDate}"
+                minDate="{path: 'oSelectionModel>/minDate', type: 'sap.ui.model.odata.type.Date', formatOptions: {pattern: 'yyyy-MM-dd'}}"
+                value="{path: 'oSelectionModel>/sActualFinishDate', type: 'sap.ui.model.odata.type.Date', formatOptions: {pattern: 'yyyy-MM-dd'}}"
                 valueFormat="yyyy-MM-dd"
+                displayFormat="dd.MM.yyyy"
             />
         </f:content>
     </f:SimpleForm>

@@ -7,6 +7,7 @@
     xmlns:c="sap.ui.core"
     xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
+    xmlns:smarttable="sap.ui.comp.smarttable"
 >
     <m:Page
         busy="{OEBReportModel>/bPageBusy}"
@@ -43,163 +44,179 @@
             </m:OverflowToolbar>
         </m:subHeader>
         <m:content>
-            <Table
-                id="idOEBTable"
-                rows="{OEBReportModel>/OEBReportList}"
-                ariaLabelledBy="title"
-                selectionMode="Single"
+            <smarttable:SmartTable 
+                id="idOEBSmartTable"
+                entitySet="OEBReportList"
+                tableBindingPath="OEBReportModel>/OEBReportList"
+                tableType="ResponsiveTable"
+                useVariantManagement="true"
+                useTablePersonalisation="true"
+                header="Records"
+                showRowCount="true"
+                enableAutoBinding="true"
+                enableExport="false"
+                demandPopin="true"
+                persistencyKey="SmartTableOEBReport"
+                requestAtLeastFields="OrderNo,StatusUser,Notification,Activity,OprShortText,Pmacttype,WorkCenter,Status,Description,StreetAndHouseNumber,PlantSection,Name,DescriptionReason,Counter,FinConstraint,EsaInspno,ActFinish,CounterDays"
             >
-                <extension>
-                    <m:OverflowToolbar style="Clear" />
-                </extension>
-                <columns>
-                    <Column width="11rem">
-                        <m:Label text="Order" />
-                        <template>
-                            <m:Link text="{OEBReportModel>OrderNo}" press="onPressOrderNo" />
-                        </template>
-                    </Column>
-                    <Column width="7rem">
-                        <m:Label text="Order status" />
-                        <template>
-                            <m:Text text="{OEBReportModel>StatusUser}" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="6rem"
-                        hAlign="End"
-                    >
-                        <m:Label text="Notification" />
-                        <template>
-                            <m:Link text="{OEBReportModel>Notification}" press="onPressNotification"/>
-                        </template>
-                    </Column>
-                    <Column width="5rem">
-                        <m:Label text="Activity" />
-                        <template>
-                            <m:Label text="{OEBReportModel>Activity}" />
-                        </template>
-                    </Column>
-                    <Column width="14rem">
-                        <m:Label text="Opr. short text" />
-                        <template>
-                            <m:Label text="{OEBReportModel>OprShortText}" />
-                        </template>
-                    </Column>
-                    <Column width="5rem">
-                        <m:Label text="PM Act Type" />
-                        <template>
-                            <m:Label text="{OEBReportModel>Pmacttype}" />
-                        </template>
-                    </Column>
-                    <Column width="7rem">
-                        <m:Label text="Work center" />
-                        <template>
-                            <m:Label text="{OEBReportModel>WorkCenter}" />
-                        </template>
-                    </Column>
-                    <Column width="14rem">
-                        <m:Label text="Operation status" />
-                        <template>
-                            <m:Label text="{OEBReportModel>Status}" />
-                        </template>
-                    </Column>
-                    <Column width="14rem">
-                        <m:Label text="Description" />
-                        <template>
-                            <m:Label text="{OEBReportModel>Description}" />
-                        </template>
-                    </Column>
-                    <Column width="12rem">
-                        <m:Label text="Address" />
-                        <template>
-                            <m:Label
-                                text="{OEBReportModel>StreetAndHouseNumber}"
-                            />
-                        </template>
-                    </Column>
-                    <Column width="12rem">
-                        <m:Label text="Plant section" />
-                        <template>
-                            <m:Label text="{OEBReportModel>PlantSection}" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="6rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="Name(BP)" />
-                        <template>
-                            <m:Label text="{OEBReportModel>Name}" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="11rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="Reason Description" />
-                        <template>
-                            <m:Label
-                                text="{OEBReportModel>DescriptionReason}"
-                            />
-                        </template>
-                    </Column>
-                    <Column
-                        width="11rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="Counter" />
-                        <template>
-                            <m:Label text="{OEBReportModel>Counter}" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="11rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="Start constraint" />
-                        <template>
-                            <m:Label text="{OEBReportModel>StartConstraint}" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="11rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="Fin.Constr" />
-                        <template>
-                            <m:Label text="{OEBReportModel>FinConstraint}" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="11rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="ESA Insp No" />
-                        <template>
-                            <m:Label text="{OEBReportModel>EsaInspno}" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="11rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="Act.finish" />
-                        <template>
-                            <m:Label text="{OEBReportModel>ActFinish}" />
-                        </template>
-                    </Column>
-                    <Column
-                        width="11rem"
-                        hAlign="Center"
-                    >
-                        <m:Label text="Counter - No of day remaining" />
-                        <template>
-                            <m:Label text="{OEBReportModel>CounterDays}" />
-                        </template>
-                    </Column>
-                </columns>
-            </Table>
+                <Table
+                    id="idOEBTable"
+                    rows="{OEBReportModel>/OEBReportList}"
+                    ariaLabelledBy="title"
+                    selectionMode="Single"
+                >
+                    <extension>
+                        <m:OverflowToolbar style="Clear" />
+                    </extension>
+                    <columns>
+                        <Column width="11rem">
+                            <m:Label text="Order" />
+                            <template>
+                                <m:Link text="{OEBReportModel>OrderNo}" press="onPressOrderNo" />
+                            </template>
+                        </Column>
+                        <Column width="7rem">
+                            <m:Label text="Order status" />
+                            <template>
+                                <m:Text text="{OEBReportModel>StatusUser}" />
+                            </template>
+                        </Column>
+                        <Column
+                            width="6rem"
+                            hAlign="End"
+                        >
+                            <m:Label text="Notification" />
+                            <template>
+                                <m:Link text="{OEBReportModel>Notification}" press="onPressNotification"/>
+                            </template>
+                        </Column>
+                        <Column width="5rem">
+                            <m:Label text="Activity" />
+                            <template>
+                                <m:Label text="{OEBReportModel>Activity}" />
+                            </template>
+                        </Column>
+                        <Column width="14rem">
+                            <m:Label text="Opr. short text" />
+                            <template>
+                                <m:Label text="{OEBReportModel>OprShortText}" />
+                            </template>
+                        </Column>
+                        <Column width="5rem">
+                            <m:Label text="PM Act Type" />
+                            <template>
+                                <m:Label text="{OEBReportModel>Pmacttype}" />
+                            </template>
+                        </Column>
+                        <Column width="7rem">
+                            <m:Label text="Work center" />
+                            <template>
+                                <m:Label text="{OEBReportModel>WorkCenter}" />
+                            </template>
+                        </Column>
+                        <Column width="14rem">
+                            <m:Label text="Operation status" />
+                            <template>
+                                <m:Label text="{OEBReportModel>Status}" />
+                            </template>
+                        </Column>
+                        <Column width="14rem">
+                            <m:Label text="Description" />
+                            <template>
+                                <m:Label text="{OEBReportModel>Description}" />
+                            </template>
+                        </Column>
+                        <Column width="12rem">
+                            <m:Label text="Address" />
+                            <template>
+                                <m:Label
+                                    text="{OEBReportModel>StreetAndHouseNumber}"
+                                />
+                            </template>
+                        </Column>
+                        <Column width="12rem">
+                            <m:Label text="Plant section" />
+                            <template>
+                                <m:Label text="{OEBReportModel>PlantSection}" />
+                            </template>
+                        </Column>
+                        <Column
+                            width="6rem"
+                            hAlign="Center"
+                        >
+                            <m:Label text="Name(BP)" />
+                            <template>
+                                <m:Label text="{OEBReportModel>Name}" />
+                            </template>
+                        </Column>
+                        <Column
+                            width="11rem"
+                            hAlign="Center"
+                        >
+                            <m:Label text="Reason Description" />
+                            <template>
+                                <m:Label
+                                    text="{OEBReportModel>DescriptionReason}"
+                                />
+                            </template>
+                        </Column>
+                        <Column
+                            width="11rem"
+                            hAlign="Center"
+                        >
+                            <m:Label text="Counter" />
+                            <template>
+                                <m:Label text="{OEBReportModel>Counter}" />
+                            </template>
+                        </Column>
+                        <Column
+                            width="11rem"
+                            hAlign="Center"
+                        >
+                            <m:Label text="Start constraint" />
+                            <template>
+                                <m:Label text="{OEBReportModel>StartConstraint}" />
+                            </template>
+                        </Column>
+                        <Column
+                            width="11rem"
+                            hAlign="Center"
+                        >
+                            <m:Label text="Fin.Constr" />
+                            <template>
+                                <m:Label text="{OEBReportModel>FinConstraint}" />
+                            </template>
+                        </Column>
+                        <Column
+                            width="11rem"
+                            hAlign="Center"
+                        >
+                            <m:Label text="ESA Insp No" />
+                            <template>
+                                <m:Label text="{OEBReportModel>EsaInspno}" />
+                            </template>
+                        </Column>
+                        <Column
+                            width="11rem"
+                            hAlign="Center"
+                        >
+                            <m:Label text="Act.finish" />
+                            <template>
+                                <m:Label text="{OEBReportModel>ActFinish}" />
+                            </template>
+                        </Column>
+                        <Column
+                            width="11rem"
+                            hAlign="Center"
+                        >
+                            <m:Label text="Counter - No of day remaining" />
+                            <template>
+                                <m:Label text="{OEBReportModel>CounterDays}" />
+                            </template>
+                        </Column>
+                    </columns>
+                </Table>
+            </smarttable:SmartTable>
         </m:content>
     </m:Page>
 </mvc:View>

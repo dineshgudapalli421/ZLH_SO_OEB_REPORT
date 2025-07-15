@@ -72,6 +72,7 @@
                 showValueHelp="false"
                 valueHelpRequest=".onValueHelpRequested"
                 suggestionItemSelected=".onMainWCSuggestionItemPress"
+                tokenUpdate=".onMainWCTokenUpdate"
                 suggestionRows="{
 				path: '/Main_Work_CenterSet'
 			}"
