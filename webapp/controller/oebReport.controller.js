@@ -9,7 +9,9 @@ sap.ui.define([
     "sap/ui/model/Filter",
     'sap/ui/model/FilterOperator',
     "sap/ui/model/json/JSONModel",
-    "sap/ui/core/routing/History"
+    "sap/ui/core/routing/History",
+    'sap/ui/core/Fragment',
+    'sap/ui/model/Sorter'
 ],
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller - The SAP UI5 Controller module
@@ -20,7 +22,7 @@ sap.ui.define([
      * @param {typeof sap.ui.model.json.JSONModel} JSONModel - The SAP UI5 JSONModel module
      * @param {typeof sap.ui.core.routing.History} History - The SAP UI5 History module
      */
-    function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel, History) {
+    function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel, History, Fragment, Sorter) {
         "use strict";
         var oController, UIComponent, oOEBoDataModel, oRouter, oResourceBundle, aSelParameters;
 
@@ -36,6 +38,7 @@ sap.ui.define([
                 oRouter = UIComponent.getRouter();
                 oResourceBundle = oController.getOwnerComponent().getModel("i18n").getResourceBundle();
                 oRouter.getRoute("OEBReport").attachPatternMatched(oController._onRouteMatch, oController);
+                oController._mViewSettingsDialogs = {};
             },
 
             /**
@@ -490,7 +493,43 @@ sap.ui.define([
                 //     }
                 // }
                 // oCrossAppNav.navigate(oTarget, oController.getOwnerComponent());
-            }
+            },
+            getViewSettingsDialog: function (sDialogFragmentName) {
+                var pDialog = this._mViewSettingsDialogs[sDialogFragmentName];
 
+                if (!pDialog) {
+                    pDialog = Fragment.load({
+                        id: this.getView().getId(),
+                        name: sDialogFragmentName,
+                        controller: this
+                    }).then(function (oDialog) {
+                        // if (Device.system.desktop) {
+                        //   oDialog.addStyleClass("sapUiSizeCompact");
+                        // }
+                        return oDialog;
+                    });
+                    oController._mViewSettingsDialogs[sDialogFragmentName] = pDialog;
+                }
+                return pDialog;
+            },
+            handleSortDialogConfirm: function (oEvent) {
+                var oTable = oController.getView().byId("idOEBTable"),
+                    mParams = oEvent.getParameters(),
+                    oBinding = oTable.getBinding("rows"),
+                    sPath,
+                    bDescending,
+                    aSorters = [];
+
+                sPath = mParams.sortItem.getKey();
+                bDescending = mParams.sortDescending;
+                aSorters.push(new Sorter(sPath, bDescending));
+                oBinding.sort(aSorters);
+            },
+            handleSortButtonPressed: function () {
+                this.getViewSettingsDialog("com.sap.lh.cs.zlhoebreport.fragment.SortDialog")
+                    .then(function (oViewSettingsDialog) {
+                        oViewSettingsDialog.open();
+                    });
+            }
         });
     });

@@ -66,8 +66,19 @@
                     selectionMode="Single"
                 >
                     <extension>
-                        <m:OverflowToolbar style="Clear" />
+                        <m:OverflowToolbar style="Clear">
+                        <m:ToolbarSeparator/>
+                         
+                        <m:ToolbarSpacer />
+                        <m:Button
+                            icon="sap-icon://sort"
+                            tooltip="Sort"
+                            press="handleSortButtonPressed"
+                        />
+                        </m:OverflowToolbar>
+                       
                     </extension>
+                    
                     <columns>
                         <Column width="11rem">
                             <m:Label text="Order" />
@@ -75,7 +86,7 @@
                                 <m:Link text="{OEBReportModel>OrderNo}" press="onPressOrderNo" />
                             </template>
                         </Column>
-                        <Column width="7rem">
+                        <Column width="7rem" >
                             <m:Label text="Order status" />
                             <template>
                                 <m:Text text="{OEBReportModel>StatusUser}" />
@@ -84,31 +95,31 @@
                         <Column
                             width="6rem"
                             hAlign="End"
-                        >
+                         >
                             <m:Label text="Notification" />
                             <template>
                                 <m:Link text="{OEBReportModel>Notification}" press="onPressNotification"/>
                             </template>
                         </Column>
-                        <Column width="5rem">
+                        <Column width="5rem" >
                             <m:Label text="Activity" />
                             <template>
                                 <m:Label text="{OEBReportModel>Activity}" />
                             </template>
                         </Column>
-                        <Column width="14rem">
+                        <Column width="14rem" >
                             <m:Label text="Opr. short text" />
                             <template>
                                 <m:Label text="{OEBReportModel>OprShortText}" />
                             </template>
                         </Column>
-                        <Column width="5rem">
+                        <Column width="5rem" >
                             <m:Label text="PM Act Type" />
                             <template>
                                 <m:Label text="{OEBReportModel>Pmacttype}" />
                             </template>
                         </Column>
-                        <Column width="7rem">
+                        <Column width="7rem" >
                             <m:Label text="Work center" />
                             <template>
                                 <m:Label text="{OEBReportModel>WorkCenter}" />
@@ -120,13 +131,13 @@
                                 <m:Label text="{OEBReportModel>Status}" />
                             </template>
                         </Column>
-                        <Column width="14rem">
+                        <Column width="14rem" >
                             <m:Label text="Description" />
                             <template>
                                 <m:Label text="{OEBReportModel>Description}" />
                             </template>
                         </Column>
-                        <Column width="12rem">
+                        <Column width="12rem" >
                             <m:Label text="Address" />
                             <template>
                                 <m:Label
@@ -134,7 +145,7 @@
                                 />
                             </template>
                         </Column>
-                        <Column width="12rem">
+                        <Column width="12rem" >
                             <m:Label text="Plant section" />
                             <template>
                                 <m:Label text="{OEBReportModel>PlantSection}" />
@@ -143,7 +154,7 @@
                         <Column
                             width="6rem"
                             hAlign="Center"
-                        >
+                         >
                             <m:Label text="Name(BP)" />
                             <template>
                                 <m:Label text="{OEBReportModel>Name}" />
@@ -163,7 +174,7 @@
                         <Column
                             width="11rem"
                             hAlign="Center"
-                        >
+                         >
                             <m:Label text="Counter" />
                             <template>
                                 <m:Label text="{OEBReportModel>Counter}" />
@@ -181,7 +192,7 @@
                         <Column
                             width="11rem"
                             hAlign="Center"
-                        >
+                         >
                             <m:Label text="Fin.Constr" />
                             <template>
                                 <m:Label text="{OEBReportModel>FinConstraint}" />
@@ -190,7 +201,7 @@
                         <Column
                             width="11rem"
                             hAlign="Center"
-                        >
+                         >
                             <m:Label text="ESA Insp No" />
                             <template>
                                 <m:Label text="{OEBReportModel>EsaInspno}" />
@@ -208,7 +219,7 @@
                         <Column
                             width="11rem"
                             hAlign="Center"
-                        >
+                         >
                             <m:Label text="Counter - No of day remaining" />
                             <template>
                                 <m:Label text="{OEBReportModel>CounterDays}" />

@@ -1,0 +1,28 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<ViewSettingsDialog
+		confirm="handleSortDialogConfirm">
+		<sortItems>
+			<ViewSettingsItem text="OrderNo" key="OrderNo" selected="true" />
+			<ViewSettingsItem text="Order Status" key="StatusUser" />
+			<ViewSettingsItem text="Notification" key="Notification" />
+			<ViewSettingsItem text="Activity" key="Activity" />
+			<ViewSettingsItem text="Opr. ShortText" key="OprShortText" />
+			<ViewSettingsItem text="PM Act Type" key="Pmacttype" />
+			<ViewSettingsItem text="Work Center" key="WorkCenter" />
+			<ViewSettingsItem text="Operation Status" key="Status" />
+			<ViewSettingsItem text="Description" key="Description" />
+			<ViewSettingsItem text="Address" key="StreetAndHouseNumber" />
+			<ViewSettingsItem text="Plant Section" key="PlantSection" />
+			<ViewSettingsItem text="Name(BP)" key="Name" />
+			<ViewSettingsItem text="Reason Description" key="DescriptionReason" />
+			<ViewSettingsItem text="Counter" key="Counter" />
+			<ViewSettingsItem text="Start Constraint" key="StartConstraint" />
+			<ViewSettingsItem text="Fin Constraint" key="FinConstraint" />
+			<ViewSettingsItem text="ESA Insp No" key="EsaInspno" />
+			<ViewSettingsItem text="Act.Finish" key="ActFinish" />
+			<ViewSettingsItem text="Counter - No of day remaining" key="CounterDays" />			
+		</sortItems>
+	</ViewSettingsDialog>
+</core:FragmentDefinition>
