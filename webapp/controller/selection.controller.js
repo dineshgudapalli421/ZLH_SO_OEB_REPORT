@@ -119,10 +119,10 @@ sap.ui.define([
 
                         this._applyVariant(oVariantSet.defaultVariant, oController._defaultVariantName);
                     }.bind(this)).catch(function (oError) {
-                        MessageToast.show("Error Loading Personalization Container:" + oError.message);
+                        //MessageToast.show("Error Loading Personalization Container:" + oError.message);
                     });
                 }.bind(this)).catch(function (oError) {
-                    MessageToast.show("Error accessing personalization service: " + oError.message);
+                    //MessageToast.show("Error accessing personalization service: " + oError.message);
                 });
             },
             _loadVariants: function (oVariantSet) {
