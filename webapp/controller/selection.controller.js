@@ -40,8 +40,12 @@ sap.ui.define([
                     aSelMainWC: [],
                     OrderStatus: [
                         { Key: "HOLD", description: "Hold" },
-                        { Key: "SRDE", description: "Site Readiness Date entered" },
-                        { Key: "RCC", description: "Ready for Customer Confirm" },
+                        // { Key: "SRDE", description: "Site Readiness Date entered" },
+                        // { Key: "RCC", description: "Ready for Customer Confirm" },
+                        { Key: "SRDE", description: "Trenching Site Rdy Date Entered" },
+                        { Key: "RCC", description: "Trenching Rdy for Cust Cnf" },
+                        { Key: "ISDE", description: "Install Site Readiness Date Entered" },
+                        { Key: "IRCC", description: "Install Ready for Customer Confirmation" },
                         { Key: "TRFD", description: "Trenching Ready for Dispatch" },
                         { Key: "ASSN", description: "Assigned" },
                         { Key: "DISP", description: "Dispatched" },
@@ -101,7 +105,7 @@ sap.ui.define([
                 oController._initPersonalizationService();
             },
             _initPersonalizationService: function () {
-                debugger;
+                //debugger;
                 var oView = this.getView();
                 var oVariantManagement = oView.byId("idOEBVariantManagement");
                 sap.ushell.Container.getServiceAsync("Personalization").then(function (oPersonalizationService) {
@@ -126,7 +130,7 @@ sap.ui.define([
                 });
             },
             _loadVariants: function (oVariantSet) {
-                debugger;
+                //debugger;
                 var oVM = oController.getView().byId("idOEBVariantManagement");
                 var defaultVariant = oController._fngetDefaultVariant(oVM);
                 oController._defaultVariantKey = defaultVariant;
@@ -153,7 +157,7 @@ sap.ui.define([
                 return defaultVariant;
             },
             _applyVariant: function (sVariantKey, sName) {
-                debugger;
+                //debugger;
                 var oVariantModel = oController.getView().getModel("oSelectionModel");
                 var oVariantSet = this._oContainer.getItemValue("variantSet") || { "variants": [] };
                 var oDefaultVariant = oVariantSet.defaultVariant;
@@ -200,7 +204,7 @@ sap.ui.define([
                 }
             },
             onSaveVariant: function (oEvent) {
-                debugger;
+                //debugger;
                 var oParameters = oEvent.getParameters();
                 var sVariantKey = oParameters.key || Date.now().toString();
                 var sVariantText = oParameters.name;
@@ -241,7 +245,7 @@ sap.ui.define([
 
             },
             onSelectVariant: function (oEvent) {
-                debugger;
+                //debugger;
                 var sVariantKey = oEvent.getParameter("key");
                 var objVariant = {}, objVariantItems = [], oName = '';
                 objVariant = oEvent.getSource().oContext.getModel().getData();
@@ -267,13 +271,13 @@ sap.ui.define([
                 this._applyVariant(sVariantKey, oName);
             },
             _fnSetEmptySelectedFields: function (objId) {
-                debugger;
+                //debugger;
                 var oMultiInput = oController.getView().byId(objId);
                 oMultiInput.removeAllTokens();
                 oMultiInput.setValue("");
             },
             onManageVariant: function (oEvent) {
-                debugger;
+                //debugger;
                 var objVariant = {}, objVariantItems = [], oName = '';
                 objVariant = oEvent.getSource().oContext.getModel().getData();
                 objVariantItems = objVariant["selection--idOEBVariantManagement"].variants;
@@ -284,7 +288,7 @@ sap.ui.define([
                 var oVariantSet = this._oContainer.getItemValue("variantSet") || { variants: [] };
                 if (aDeleted !== undefined) {
                     oParameters.deleted.forEach(function (sKey) {
-                        debugger;
+                        //debugger;
                         for (var i = 0; i < objVariantItems.length; i++) {
                             if (sKey !== objVariantItems[i].key) {
                                 oName = objVariantItems[i].title;
@@ -325,7 +329,7 @@ sap.ui.define([
             },
 
             onPressNext: function () {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var sPath = "/OEB_OPSSet";
                 oModel.setProperty("/bPageBusy", true);
@@ -455,7 +459,7 @@ sap.ui.define([
                 var selectionSet = oEvent.getParameters().selectionSet;
                 var OrderID = selectionSet[0].getValue();
                 var Description = selectionSet[1].getValue();
-                debugger;
+                //debugger;
             },
             _getTockens: function (oSource) {
                 var aList = [];
@@ -465,7 +469,7 @@ sap.ui.define([
             },
 
             _fnReturnFilterparameter: function () {
-                debugger;
+                //debugger;
                 var oView = oController.getView();
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var OrderStatus = oModel.getProperty("/OrderStatusSelected"); // oController._getTockens();
@@ -541,7 +545,7 @@ sap.ui.define([
                 oMultiInput.setValue("");
             },
             onOrderNumberOkPress: function (oEvent) {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oMultiInput = oController.getView().byId("idServiceOrder");
                 var aTokens = oEvent.getParameter("tokens");
@@ -560,7 +564,7 @@ sap.ui.define([
                 this._oValueHelpDialog.close();
             },
             onOrderSuggestionItemPress: function (oEvent) {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oMultiInput = oController.getView().byId("idServiceOrder");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
@@ -588,7 +592,7 @@ sap.ui.define([
             },
 
             onMainWCSuggestionItemPress: function (oEvent) {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oMultiInput = oController.getView().byId("idMainWorkCenter");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
@@ -617,7 +621,7 @@ sap.ui.define([
             },
 
             onOperationWCSuggestionItemPress: function (oEvent) {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oMultiInput = oController.getView().byId("idOpWorkCenter");
                 var oSelectedItem = oEvent.getParameter("selectedRow");
@@ -645,7 +649,7 @@ sap.ui.define([
             },
 
             onOrderNoTokenUpdate: function (oEvent) {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oMultiInput = oController.getView().byId("idServiceOrder");
                 var sAction = oEvent.getParameter("type");
@@ -665,7 +669,7 @@ sap.ui.define([
                 oModel.setProperty("/aSelOrders", aSelectedData);
             },
             onMainWCTokenUpdate: function (oEvent) {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oMultiInput = oController.getView().byId("idMainWorkCenter");
                 var sAction = oEvent.getParameter("type");
@@ -685,7 +689,7 @@ sap.ui.define([
                 oModel.setProperty("/aSelMainWC", aSelectedData);
             },
             onOperationWCTokenUpdate: function (oEvent) {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oMultiInput = oController.getView().byId("idOpWorkCenter");
                 var sAction = oEvent.getParameter("type");
@@ -706,7 +710,7 @@ sap.ui.define([
             },
 
             onDateChange: function (oEvent) {
-                debugger;
+                //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
                 var oDatePicker = oEvent.getSource();
                 var sNewValue = oEvent.getParameter("newValue");
