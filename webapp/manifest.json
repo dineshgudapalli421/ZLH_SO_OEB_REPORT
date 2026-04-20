@@ -23,7 +23,7 @@
           "annotations": [
             "annotation0"
           ],
-          "localUri": "localService/metadata.xml",
+          "localUri": "localService/mainService/metadata.xml",
           "odataVersion": "2.0"
         }
       },
@@ -41,7 +41,16 @@
           "annotations": [
             "annotation0"
           ],
-          "localUri": "localService/metadata.xml",
+          "localUri": "localService/ORDOPRService/metadata.xml",
+          "odataVersion": "2.0"
+        }
+      },
+      "ServiceOrderData": {
+        "uri": "/sap/opu/odata/SAP/ZWM_FIELD_COMP_WORK_SRV/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/ZWM_FIELD_COMP_WORK_SRV/metadata.xml",
           "odataVersion": "2.0"
         }
       }
@@ -96,6 +105,11 @@
       },
       "ORDModel": {
         "dataSource": "ORDOPRService",
+        "preload": true,
+        "settings": {}
+      },
+      "ServiceOrderData": {
+        "dataSource": "ZWM_FIELD_COMP_WORK_SRV",
         "preload": true,
         "settings": {}
       }

@@ -20,6 +20,6 @@ builder:
           name: ZLH_SO_OEB
           description: OEB Application
           package: ZFIORI
-          transport: SDVK914610
+          transport: SDVK916356
         exclude:
           - /test/

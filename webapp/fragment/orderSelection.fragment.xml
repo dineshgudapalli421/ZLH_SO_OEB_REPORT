@@ -27,6 +27,28 @@
         <f:content>
             <Label text="Order No" />
             <MultiInput
+			id="idServiceOrder"
+			width="60%"
+			valueHelpRequest=".onServiceOrderVH"
+			suggestionRows="{
+				path: 'ServiceOrderData>/ORDER_NumberSet'
+			}">
+			<suggestionColumns>
+				<Column>
+					<Label text="Order ID"/>
+				</Column>
+				<Column>
+					<Label text="Description"/>
+				</Column>
+			</suggestionColumns>
+			<suggestionRows>
+				<ColumnListItem>
+					<Label text="{ORDER_ID}" />
+					<Label text="{DESCRIPTION}" />
+				</ColumnListItem>
+			</suggestionRows>
+		</MultiInput>
+            <!-- <MultiInput
                 id="idServiceOrder"
                 width="60%"
                 showValueHelp="true"
@@ -56,7 +78,7 @@
                         <Label text="{Description}" />
                     </ColumnListItem>
                 </suggestionRows>
-            </MultiInput>
+            </MultiInput> -->
             <Label text="Order Type" />
             <MultiInput
                 id="idOrderType"

@@ -19,6 +19,9 @@ server:
           - path: /sap
             url: http://sapsdvapp.aws.londonhydro.cloud:8000
             client: '200'
+          - url: http://sapsdvapp.aws.londonhydro.cloud:8000/
+            client: '200'
+            path: /sap/opu/odata/SAP/ZWM_FIELD_COMP_WORK_SRV/
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:
@@ -31,7 +34,15 @@ server:
         mountPath: /
         services:
           - urlPath: /sap/opu/odata/sap/ZWM_SS_ORDER_OEB_SRV
-            metadataPath: ./webapp/localService/metadata.xml
-            mockdataPath: ./webapp/localService/data
+            metadataPath: ./webapp/localService/mainService/metadata.xml
+            mockdataPath: ./webapp/localService/mainService/data
+            generateMockData: true
+          - urlPath: /sap/opu/odata/sap/ZWM_ORDOPR_SCH_SRV
+            metadataPath: ./webapp/localService/ORDOPRService/metadata.xml
+            mockdataPath: ./webapp/localService/ORDOPRService/data
+            generateMockData: true
+          - urlPath: /sap/opu/odata/SAP/ZWM_FIELD_COMP_WORK_SRV
+            metadataPath: ./webapp/localService/ZWM_FIELD_COMP_WORK_SRV/metadata.xml
+            mockdataPath: ./webapp/localService/ZWM_FIELD_COMP_WORK_SRV/data
             generateMockData: true
         annotations: []
