@@ -30,6 +30,26 @@
 			id="idServiceOrder"
 			width="60%"
 			valueHelpRequest=".onServiceOrderVH"
+            showSuggestion="true"
+            suggestionItemSelected=".onOrderSuggestionItemPress"
+			suggestionItems="{
+				path: 'ServiceOrderModel>/OrderCollection'
+			}">
+			<suggestionItems>
+				<core:ListItem
+					key="{ServiceOrderModel>ORDER_ID}"
+					text="{
+						path : 'ServiceOrderModel>ORDER_ID'
+                    }"
+					additionalText="{
+						path : 'ServiceOrderModel>DESCRIPTION'
+					}"/>
+			</suggestionItems>
+		</MultiInput>
+            <!-- <MultiInput
+			id="idServiceOrder"
+			width="60%"
+			valueHelpRequest=".onServiceOrderVH"
 			suggestionRows="{
 				path: 'ServiceOrderData>/ORDER_NumberSet'
 			}">
@@ -47,7 +67,7 @@
 					<Label text="{DESCRIPTION}" />
 				</ColumnListItem>
 			</suggestionRows>
-		</MultiInput>
+		</MultiInput> -->
             <!-- <MultiInput
                 id="idServiceOrder"
                 width="60%"

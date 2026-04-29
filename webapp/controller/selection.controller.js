@@ -20,7 +20,7 @@ sap.ui.define([
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel, Token, UIColumn, Label, PersonalizationV2, DateType,oDataModel,MColumn, Text, Fragment, TypeString,SearchField) {
+    function (Controller, MessageToast, MessageBox, Filter, FilterOperator, JSONModel, Token, UIColumn, Label, PersonalizationV2, DateType, oDataModel, MColumn, Text, Fragment, TypeString, SearchField) {
         "use strict";
         var oRouter, oController, oSelectionScreenModel, oOEBoDataModel, oResourceBundle, UIComponent;
         return Controller.extend("com.sap.lh.cs.zlhoebreport.controller.selection", {
@@ -31,7 +31,7 @@ sap.ui.define([
                 UIComponent = oController.getOwnerComponent();
                 var oMultiInput = oController.byId("idServiceOrder");
                 oController._oMultiInput = oMultiInput;
-
+                oController._oMultiInput.addValidator(oController._onMultiInputValidate);
                 var oServiceOrderModel = new oDataModel("/sap/opu/odata/sap/ZWM_FIELD_COMP_WORK_SRV/", {
                     json: true,
                     useBatch: false
@@ -591,17 +591,7 @@ sap.ui.define([
             onOrderSuggestionItemPress: function (oEvent) {
                 //debugger;
                 var oModel = oController.getView().getModel("oSelectionModel");
-                var oMultiInput = oController.getView().byId("idServiceOrder");
-                var oSelectedItem = oEvent.getParameter("selectedRow");
-                var oSelectedCells = oSelectedItem.getCells();
-                var aToken = new Token({
-                    key: oSelectedCells[1].getText(),
-                    text: oSelectedCells[0].getText()
-                });
-
-                oMultiInput.addToken(aToken);
-                oMultiInput.setValue("");
-
+                var oMultiInput = oController.getView().byId("idServiceOrder");                
                 var aTokens = oMultiInput.getTokens();
                 oModel.setProperty("/aSelOrders", []);
                 var aSelectedKeys = oModel.getProperty("/aSelOrders");
@@ -610,7 +600,6 @@ sap.ui.define([
                     var sText = oToken.getText();
                     if (!aSelectedKeys.includes(sKey)) {
                         aSelectedKeys.push({ "key": sKey, "text": sText });
-                        //aSelectedKeys.push(sKey);
                     }
                 });
                 oModel.setProperty("/aSelOrders", aSelectedKeys);
@@ -742,7 +731,7 @@ sap.ui.define([
                 oModel.setProperty("/sActualFinishDate", sNewValue);
             },
             onServiceOrderVH: function () {
-                debugger;
+                //debugger;
                 oController._oBasicSearchField = new SearchField();
                 oController.loadFragment({
                     name: "com.sap.lh.cs.zlhoebreport.fragment.valueHelp.ValueHelpDialogFilterbar"
@@ -818,12 +807,12 @@ sap.ui.define([
                         oDialog.update();
                     }.bind(oController));
 
-                    //oDialog.setTokens(oController._oMultiInput.getTokens());
+                    oDialog.setTokens(oController._oMultiInput.getTokens());
                     oDialog.open();
                 }.bind(oController));
             },
             onValueHelpOkPress: function (oEvent) {
-                debugger;
+                //debugger;
                 var aTokens = oEvent.getParameter("tokens");
                 oController._oMultiInput.setTokens(aTokens);
                 oController._oVHD.close();
@@ -879,6 +868,17 @@ sap.ui.define([
                     // This method must be called after binding update of the table.
                     oVHD.update();
                 });
+            },
+            _onMultiInputValidate: function (oArgs) {
+                //debugger;
+                if (oArgs.suggestionObject) {
+                    var ORDER_ID = oArgs.suggestionObject.getKey(),
+                        oToken = new Token();
+                    oToken.setKey(ORDER_ID);
+                    oToken.setText(ORDER_ID);
+                    return oToken;
+                }
+                return null;
             }
         });
 
